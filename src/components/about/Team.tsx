@@ -6,12 +6,9 @@ import Reveal from "@/components/ui/Reveal";
 /**
  * The people who own each area of the work.
  *
- * `photo` and `linkedin` are deliberately optional. Real portraits sit in
- * /public/team/1-8.png but nobody has confirmed which file is which person, so
- * wiring them on a guess would put the wrong face against a real name. Fill in
- * `photo` (e.g. "/team/3.png") and `linkedin` per person and both the portrait
- * and the icon appear automatically — the arch already reserves the exact
- * space, so nothing shifts when they land.
+ * `photo` and `linkedin` are optional: without a photo the card falls back to
+ * initials on a gradient. Set either one per person and it appears
+ * automatically — the arch reserves the exact space, so nothing shifts.
  */
 type Member = {
   name: string;

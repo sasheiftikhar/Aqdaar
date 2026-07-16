@@ -3,7 +3,7 @@ import nodemailer from "nodemailer";
 
 export const runtime = "nodejs";
 
-const TO = process.env.CONTACT_TO || "support@extensorlabs.com";
+const TO = process.env.CONTACT_TO || "aqdaar.jamal@gmail.com";
 
 function escapeHtml(str = "") {
   return String(str)
@@ -89,7 +89,7 @@ export async function POST(request) {
 
   try {
     await transporter.sendMail({
-      from: process.env.CONTACT_FROM || `Extensor Labs Website <${SMTP_USER}>`,
+      from: process.env.CONTACT_FROM || `Aqdaar Website <${SMTP_USER}>`,
       to: TO,
       replyTo: `${name} <${email}>`,
       subject: `[Contact] ${cleanSubject}`,

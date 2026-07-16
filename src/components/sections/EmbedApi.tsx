@@ -2,14 +2,30 @@
 
 import { motion } from "framer-motion";
 import Reveal from "@/components/ui/Reveal";
+import { ROUTES } from "@/lib/nav";
+
+/**
+ * Syntax palette, drawn from the site's three accents in globals.css:
+ * lavender for keywords, butter for strings, mint for identifiers. Kept as
+ * named roles so a token's colour can't drift out of the palette by accident.
+ */
+const T = {
+  keyword: "#cabfe1", // lavender
+  string: "#f5efd3", // butter
+  ident: "#b4d9ce", // mint
+  method: "#d4ede1", // mint-light
+  type: "#f4f4f5",
+  punct: "#56565c",
+  dim: "#8a8a92",
+};
 
 const CODE_LINES = [
-  [{ t: 'import ', c: "#c084fc" }, { t: "Aqdaar ", c: "#f4f4f5" }, { t: "from ", c: "#c084fc" }, { t: '"@aqdaar/sdk"', c: "#CABFE1" }, { t: ";", c: "#56565c" }],
-  [{ t: "const ", c: "#c084fc" }, { t: "aqdaar ", c: "#4c8dff" }, { t: "= ", c: "#56565c" }, { t: "new ", c: "#c084fc" }, { t: "Aqdaar", c: "#f4f4f5" }, { t: "({ apiKey: process.env.AQDAAR_API_KEY });", c: "#8a8a92" }],
-  [{ t: "const ", c: "#c084fc" }, { t: "run ", c: "#4c8dff" }, { t: "= ", c: "#56565c" }, { t: "await ", c: "#c084fc" }, { t: "aqdaar.tasks.", c: "#f4f4f5" }, { t: "run", c: "#B4D9CE" }, { t: '("task_x9y8z7", {', c: "#8a8a92" }],
-  [{ t: "  connection_id: ", c: "#4c8dff" }, { t: '"conn_a1b2c3d4"', c: "#CABFE1" }, { t: ",", c: "#56565c" }],
-  [{ t: "  input: { check_in: ", c: "#4c8dff" }, { t: '"2026-04-01"', c: "#CABFE1" }, { t: ", check_out: ", c: "#4c8dff" }, { t: '"2026-04-05"', c: "#CABFE1" }, { t: " }", c: "#56565c" }],
-  [{ t: "});", c: "#8a8a92" }],
+  [{ t: 'import ', c: T.keyword }, { t: "Aqdaar ", c: T.type }, { t: "from ", c: T.keyword }, { t: '"@aqdaar/sdk"', c: T.string }, { t: ";", c: T.punct }],
+  [{ t: "const ", c: T.keyword }, { t: "aqdaar ", c: T.ident }, { t: "= ", c: T.punct }, { t: "new ", c: T.keyword }, { t: "Aqdaar", c: T.type }, { t: "({ apiKey: process.env.AQDAAR_API_KEY });", c: T.dim }],
+  [{ t: "const ", c: T.keyword }, { t: "run ", c: T.ident }, { t: "= ", c: T.punct }, { t: "await ", c: T.keyword }, { t: "aqdaar.tasks.", c: T.type }, { t: "run", c: T.method }, { t: '("task_x9y8z7", {', c: T.dim }],
+  [{ t: "  connection_id: ", c: T.ident }, { t: '"conn_a1b2c3d4"', c: T.string }, { t: ",", c: T.punct }],
+  [{ t: "  input: { check_in: ", c: T.ident }, { t: '"2026-04-01"', c: T.string }, { t: ", check_out: ", c: T.ident }, { t: '"2026-04-05"', c: T.string }, { t: " }", c: T.punct }],
+  [{ t: "});", c: T.dim }],
 ];
 
 const RESPONSE = `{
@@ -22,7 +38,8 @@ const RESPONSE = `{
   }
 }`;
 
-/* Purple→green aurora used behind the glass code panel (no image needed). */
+/* Lavender→mint aurora behind the glass code panel (no image needed). Dark
+   stops are the palette's own accents, dropped to surface luminance. */
 function AuroraBackdrop() {
   return (
     <div className="pointer-events-none absolute inset-0 overflow-hidden rounded-2xl">
@@ -30,14 +47,14 @@ function AuroraBackdrop() {
         className="absolute inset-0"
         style={{
           background:
-            "linear-gradient(165deg, #4b3a86 0%, #3a2d63 28%, #24304a 52%, #1b3f34 74%, #123021 100%)",
+            "linear-gradient(165deg, #3f3557 0%, #322b46 28%, #241f30 52%, #24413a 74%, #17302a 100%)",
         }}
       />
       <motion.div
         className="absolute -top-1/4 left-1/5 h-64 w-64 rounded-full blur-3xl"
         style={{
           background:
-            "radial-gradient(closest-side, rgba(139,92,246,0.55), transparent)",
+            "radial-gradient(closest-side, rgba(202,191,225,0.5), transparent)",
         }}
         animate={{ x: [0, 34, 0], y: [0, 22, 0], opacity: [0.55, 0.9, 0.55] }}
         transition={{ duration: 11, repeat: Infinity, ease: "easeInOut" }}
@@ -51,7 +68,7 @@ function AuroraBackdrop() {
         animate={{ x: [0, -26, 0], y: [0, -18, 0], opacity: [0.5, 0.85, 0.5] }}
         transition={{ duration: 13, repeat: Infinity, ease: "easeInOut" }}
       />
-      {/* faint diagonal contour, echoing the grassy hills texture */}
+      {/* faint diagonal contour over the wash */}
       <div
         className="absolute inset-0 opacity-25 mix-blend-soft-light"
         style={{
@@ -137,7 +154,7 @@ export default function EmbedApi() {
           </Reveal>
           <Reveal delay={0.2}>
             <a
-              href="#solutions"
+              href={ROUTES.solutions}
               className="mt-6 inline-flex items-center gap-2 font-medium text-accent"
             >
               Explore All Solutions →

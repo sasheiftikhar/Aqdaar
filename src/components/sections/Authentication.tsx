@@ -294,7 +294,7 @@ const VAULT_ROWS = [
   { color: "#ff5a5f", label: "A" },
   { color: "#00a8e0", label: "C" },
   { color: "#ff9900", label: "S" },
-  { color: "#8b5cf6", label: "X" },
+  { color: "#cabfe1", label: "X" },
 ];
 
 function CredentialVaultCard() {

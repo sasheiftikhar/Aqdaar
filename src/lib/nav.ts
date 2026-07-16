@@ -17,8 +17,6 @@ export const ROUTES = {
   events: "/events",
   blog: "/blog",
   contact: "/contact",
-  api: "/api",
-  forBusiness: "/for-business",
   privacy: "/privacy",
   terms: "/terms",
 } as const;
@@ -52,8 +50,6 @@ export const FOOTER_OFFERINGS: NavLink[] = [
   { label: "Trainings", href: ROUTES.trainings },
   { label: "Consultation", href: ROUTES.consultation },
   { label: "Solutions", href: ROUTES.solutions },
-  { label: "For Business", href: ROUTES.forBusiness },
-  { label: "Developer API", href: ROUTES.api },
 ];
 
 export const FOOTER_LEGAL: NavLink[] = [

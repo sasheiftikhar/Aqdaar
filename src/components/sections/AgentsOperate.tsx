@@ -8,16 +8,16 @@ import { ROUTES } from "@/lib/nav";
 const TABS = ["Overview", "Design", "Build", "Ship"];
 
 const CANDIDATES = [
-  { name: "Zairen", role: "Product Design", stage: "Handoff", status: "Shipped", tone: "green" },
-  { name: "Manufacturing ERP", role: "System Build", stage: "QA", status: "In Build", tone: "amber" },
-  { name: "Admin LMS", role: "Web App", stage: "Prototype", status: "Review", tone: "blue" },
-  { name: "GRC Suite", role: "AI-native", stage: "Discovery", status: "Planning", tone: "amber" },
+  { name: "Zairen", role: "Product Design", stage: "Handoff", status: "Shipped", tone: "done" },
+  { name: "Manufacturing ERP", role: "System Build", stage: "QA", status: "In Build", tone: "running" },
+  { name: "Admin LMS", role: "Web App", stage: "Prototype", status: "Review", tone: "review" },
+  { name: "GRC Suite", role: "AI-native", stage: "Discovery", status: "Planning", tone: "running" },
 ];
 
 const toneMap: Record<string, string> = {
-  amber: "bg-[#AFA3BF]/15 text-[#AFA3BF]",
-  green: "bg-done/15 text-done",
-  blue: "bg-[#4c8dff]/15 text-[#4c8dff]",
+  running: "bg-running/15 text-running",
+  done: "bg-done/15 text-done",
+  review: "bg-butter/15 text-butter",
 };
 
 function AppMock() {

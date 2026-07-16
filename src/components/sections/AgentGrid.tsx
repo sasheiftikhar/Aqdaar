@@ -4,6 +4,7 @@ import { motion } from "framer-motion";
 import { useCallback, useEffect, useRef, useState } from "react";
 import BrandTile from "@/components/ui/BrandTile";
 import Reveal from "@/components/ui/Reveal";
+import { ROUTES } from "@/lib/nav";
 
 type Base = "running" | "completed";
 
@@ -236,7 +237,7 @@ export default function AgentGrid() {
 
         <Reveal delay={0.15}>
           <a
-            href="#solutions"
+            href={ROUTES.solutions}
             className="mt-10 inline-flex items-center gap-2 font-medium text-accent"
           >
             Explore All Solutions →

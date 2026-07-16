@@ -3,6 +3,7 @@
 import { AnimatePresence, motion } from "framer-motion";
 import { useEffect, useRef, useState } from "react";
 import Reveal from "@/components/ui/Reveal";
+import { ROUTES } from "@/lib/nav";
 
 const SIDEBAR = [
   "Guman 2.0",
@@ -220,7 +221,7 @@ export default function Console() {
           </Reveal>
           <Reveal delay={0.2}>
             <a
-              href="#events"
+              href={ROUTES.events}
               className="mt-6 inline-flex items-center gap-2 font-medium text-accent"
             >
               See all events →

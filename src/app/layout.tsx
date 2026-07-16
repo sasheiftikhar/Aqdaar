@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { Space_Grotesk, JetBrains_Mono, Caveat } from "next/font/google";
+import PageTransition from "@/components/transition/PageTransition";
 import "./globals.css";
 
 const sans = Space_Grotesk({
@@ -34,7 +35,10 @@ export default function RootLayout({
       lang="en"
       className={`${sans.variable} ${mono.variable} ${script.variable}`}
     >
-      <body>{children}</body>
+      <body>
+        <PageTransition />
+        {children}
+      </body>
     </html>
   );
 }

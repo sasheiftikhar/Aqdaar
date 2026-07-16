@@ -2,6 +2,7 @@
 
 import { motion } from "framer-motion";
 import { useEffect, useState } from "react";
+import { ROUTES } from "@/lib/nav";
 
 /* ------------------------------------------------------------------ */
 /* One SVG holds the globe and the green pulses flowing along its lines */
@@ -254,14 +255,14 @@ export default function Hero() {
             className="mt-8 flex flex-col items-center justify-center gap-4 sm:flex-row"
           >
             <a
-              href="#consult"
+              href={ROUTES.consultation}
               className="bg-primary-gradient on-accent group flex items-center gap-2 rounded-xl px-7 py-3.5 font-semibold transition-transform hover:-translate-y-0.5"
             >
               Free Consultation
               <span className="transition-transform group-hover:translate-x-1">→</span>
             </a>
             <a
-              href="#services"
+              href={ROUTES.services}
               className="font-medium text-fg underline-offset-4 transition-colors hover:text-accent hover:underline"
             >
               Explore Our Services
