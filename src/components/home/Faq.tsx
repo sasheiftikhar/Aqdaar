@@ -37,12 +37,18 @@ function Item({ q, a }: { q: string; a: string }) {
     <div className="border-b border-border">
       <button
         onClick={() => setOpen((v) => !v)}
-        className="flex w-full items-center justify-between gap-4 py-5 text-left"
+        aria-expanded={open}
+        className={`group flex w-full items-center justify-between gap-6 py-5 text-left transition-colors duration-200 ${
+          open ? "text-mint" : "text-fg hover:text-accent"
+        }`}
       >
-        <span className="text-lg font-medium text-fg">{q}</span>
+        <span className="text-lg font-medium">{q}</span>
         <motion.span
           animate={{ rotate: open ? 45 : 0 }}
-          className="shrink-0 text-2xl text-accent"
+          transition={{ duration: 0.25, ease: [0.22, 1, 0.36, 1] }}
+          className={`shrink-0 text-xl transition-colors duration-200 ${
+            open ? "text-mint" : "text-faint group-hover:text-accent"
+          }`}
         >
           +
         </motion.span>
@@ -53,7 +59,7 @@ function Item({ q, a }: { q: string; a: string }) {
             initial={{ height: 0, opacity: 0 }}
             animate={{ height: "auto", opacity: 1 }}
             exit={{ height: 0, opacity: 0 }}
-            transition={{ duration: 0.3, ease: [0.22, 1, 0.36, 1] }}
+            transition={{ duration: 0.32, ease: [0.22, 1, 0.36, 1] }}
             className="overflow-hidden"
           >
             <p className="pb-5 pr-10 text-muted">{a}</p>

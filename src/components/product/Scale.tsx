@@ -39,14 +39,16 @@ function AgentSwarmGrid() {
             <Counter to={6} />
           </p>
           <p className="text-xs uppercase tracking-wide text-[#AFA3BF]">
-            running
+            in build
           </p>
         </div>
         <div>
           <p className="text-3xl font-semibold text-fg">
-            <Counter to={847} />
+            <Counter to={3} />
           </p>
-          <p className="text-xs uppercase tracking-wide text-done">completed</p>
+          <p className="text-xs uppercase tracking-wide text-done">
+            categories
+          </p>
         </div>
       </div>
       <div className="grid grid-cols-12 gap-2">
@@ -58,7 +60,7 @@ function AgentSwarmGrid() {
               className="aspect-square rounded-[4px]"
               style={{
                 background: running
-                  ? "rgba(240,147,43,0.8)"
+                  ? "rgba(202,191,225,0.9)"
                   : "rgba(180,217,206,0.35)",
               }}
               animate={
@@ -87,16 +89,16 @@ export default function Scale() {
           <div>
             <Reveal>
               <h2 className="display text-4xl font-bold sm:text-6xl">
-                One agent or thousands.{" "}
+                One business or a thousand.{" "}
                 <span className="text-muted">Same platform.</span>
               </h2>
             </Reveal>
             <Reveal delay={0.1}>
               <p className="mt-6 max-w-md text-lg text-muted">
-                Aqdaar provisions agent sandboxes in seconds. Design a single
-                task that works across many sources to streamline setup. Your
-                agents run in parallel across credentials, sources, and
-                timezones.
+                Every solution on Aqdaar ships on shared rails — the same
+                authentication, data layer, and deployment pipeline. Onboard one
+                factory floor or roll out across an entire sector without
+                rebuilding the foundation.
               </p>
             </Reveal>
           </div>
@@ -109,22 +111,22 @@ export default function Scale() {
           <Reveal>
             <div>
               <h4 className="text-xl font-semibold text-fg">
-                One task, many sources
+                One stack, every sector
               </h4>
               <p className="mt-2 text-muted">
-                Tasks in Aqdaar outline an objective, and your agent performs it
-                across any source that supports it. Return consistent information
-                across varied sources.
+                A platform built for a manufacturing floor inherits the same
+                rails as one built for a classroom. Shared infrastructure means
+                every new solution starts further ahead than the last.
               </p>
             </div>
           </Reveal>
           <Reveal delay={0.1}>
             <div>
-              <h4 className="text-xl font-semibold text-fg">Always on</h4>
+              <h4 className="text-xl font-semibold text-fg">Built to hand over</h4>
               <p className="mt-2 text-muted">
-                Agents don&apos;t have office hours. Run tasks on a schedule,
-                trigger them from events, or let workflows chain them
-                automatically.
+                Each solution ships with the structure to grow — onboarding,
+                support, and a clear expansion path — so going from one site to
+                many is a rollout, not a rebuild.
               </p>
             </div>
           </Reveal>
