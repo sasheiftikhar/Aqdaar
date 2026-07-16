@@ -121,7 +121,7 @@ function CodeMock() {
           transition={{ delay: 0.9 }}
           className="mt-5 border-t border-white/10 pt-4"
         >
-          <p className="mb-2 text-white/40">// Response</p>
+          <p className="mb-2 text-white/40">{"// Response"}</p>
           <pre className="text-white/60">{RESPONSE}</pre>
         </motion.div>
         </div>

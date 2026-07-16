@@ -134,7 +134,7 @@ function OperateMock() {
           </motion.div>
         </div>
         <div className="flex flex-col rounded-xl border border-border bg-black/40 p-3">
-          <p className="mb-2 text-[10px] text-faint">// extracted</p>
+          <p className="mb-2 text-[10px] text-faint">{"// extracted"}</p>
           <pre className="font-mono text-[10px] leading-relaxed text-muted">
             {`{
   "account": "DK-4471",
