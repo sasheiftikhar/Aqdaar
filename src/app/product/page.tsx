@@ -11,7 +11,6 @@ import NaturalLanguage from "@/components/product/NaturalLanguage";
 import Extensibility from "@/components/product/Extensibility";
 import ValueProps from "@/components/product/ValueProps";
 import PhaseTimeline from "@/components/product/PhaseTimeline";
-import ProductFaq from "@/components/product/ProductFaq";
 
 export const metadata: Metadata = {
   title: "Aqdaar Studio | Product",
@@ -42,8 +41,6 @@ export default function ProductPage() {
         <ValueProps />
         {/* 9 — how it works: 3 phases */}
         <PhaseTimeline />
-        {/* 10 — FAQ */}
-        <ProductFaq />
         {/* our CTA */}
         <FinalCta />
       </main>

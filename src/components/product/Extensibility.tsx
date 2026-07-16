@@ -136,7 +136,7 @@ export default function Extensibility() {
 
         <Reveal delay={0.15}>
           <a
-            href="#solutions"
+            href="/solutions"
             className="group mt-8 inline-flex items-center gap-2 text-sm font-semibold text-accent"
           >
             Explore our solutions

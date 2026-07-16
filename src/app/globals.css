@@ -90,6 +90,15 @@ body {
   line-height: 0.95;
 }
 
+/* Rails that scroll sideways on narrow screens without showing a bar */
+.scrollbar-none {
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+.scrollbar-none::-webkit-scrollbar {
+  display: none;
+}
+
 /* Faint dotted texture used across sections */
 .dot-grid {
   background-image: radial-gradient(circle at center, #ffffff10 1px, transparent 1px);

@@ -3,6 +3,7 @@
 import { motion } from "framer-motion";
 import Reveal from "@/components/ui/Reveal";
 import SoftGlow from "@/components/ui/SoftGlow";
+import { ROUTES } from "@/lib/nav";
 
 const TONES = ["#cabfe1", "#b4d9ce", "#f5efd3"];
 
@@ -93,7 +94,7 @@ const OFFERINGS = [
     body: "Bootcamps, skills series, and short courses that turn ambition into capability.",
     dri: "Mr. Shoaib",
     cta: "Explore Trainings",
-    href: "#trainings",
+    href: ROUTES.trainings,
     icon: <TrainingsIcon />,
   },
   {
@@ -101,7 +102,7 @@ const OFFERINGS = [
     body: "Strategic advisory for founders and organizations building products, platforms, spaces, or ecosystems.",
     dri: "Jamaluddin Ahmed Siddiqui",
     cta: "Book Consultation",
-    href: "#consult",
+    href: ROUTES.consultation,
     icon: <ConsultationIcon />,
   },
   {
@@ -109,7 +110,7 @@ const OFFERINGS = [
     body: "Industrial-grade platforms — from AI-native GRC to manufacturing ERPs — built and deployed under Aqdaar.",
     dri: "Aquib ul Haq",
     cta: "View Solutions",
-    href: "#solutions",
+    href: ROUTES.solutions,
     icon: <SolutionsIcon />,
   },
 ];

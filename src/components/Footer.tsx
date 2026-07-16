@@ -1,16 +1,6 @@
-const SITEMAP = [
-  "About",
-  "Services",
-  "Solutions",
-  "Trainings",
-  "Consultation",
-  "Events",
-  "Blog",
-  "Contact",
-];
+import { FOOTER_LEGAL, FOOTER_OFFERINGS, FOOTER_SITEMAP } from "@/lib/nav";
 
-const OFFERINGS = ["Trainings", "Consultation", "Solutions"];
-
+/* Socials stay on "#" until the real handles are confirmed. */
 const SOCIALS = ["LinkedIn", "Instagram", "Facebook"];
 
 export default function Footer() {
@@ -23,13 +13,13 @@ export default function Footer() {
           <div>
             <h5 className="mb-4 text-sm font-semibold text-fg">Sitemap</h5>
             <ul className="space-y-2.5">
-              {SITEMAP.map((link) => (
-                <li key={link}>
+              {FOOTER_SITEMAP.map((link) => (
+                <li key={link.label}>
                   <a
-                    href="#"
+                    href={link.href}
                     className="text-sm text-muted transition-colors hover:text-fg"
                   >
-                    {link}
+                    {link.label}
                   </a>
                 </li>
               ))}
@@ -40,13 +30,13 @@ export default function Footer() {
           <div>
             <h5 className="mb-4 text-sm font-semibold text-fg">Offerings</h5>
             <ul className="space-y-2.5">
-              {OFFERINGS.map((link) => (
-                <li key={link}>
+              {FOOTER_OFFERINGS.map((link) => (
+                <li key={link.label}>
                   <a
-                    href="#"
+                    href={link.href}
                     className="text-sm text-muted transition-colors hover:text-fg"
                   >
-                    {link}
+                    {link.label}
                   </a>
                 </li>
               ))}
@@ -128,12 +118,15 @@ export default function Footer() {
         <div className="flex flex-col items-center gap-3 border-t border-border py-6 text-sm text-muted md:flex-row md:justify-between">
           <span>© 2026 Aqdaar. All rights reserved. Karachi, Pakistan.</span>
           <div className="flex items-center gap-5">
-            <a href="#" className="transition-colors hover:text-fg">
-              Privacy Policy
-            </a>
-            <a href="#" className="transition-colors hover:text-fg">
-              Terms of Service
-            </a>
+            {FOOTER_LEGAL.map((link) => (
+              <a
+                key={link.label}
+                href={link.href}
+                className="transition-colors hover:text-fg"
+              >
+                {link.label}
+              </a>
+            ))}
           </div>
           <span
             className="text-base text-accent"

@@ -3,6 +3,7 @@
 import { motion } from "framer-motion";
 import { useEffect, useState } from "react";
 import Reveal from "@/components/ui/Reveal";
+import { ROUTES } from "@/lib/nav";
 
 const TABS = ["Overview", "Design", "Build", "Ship"];
 
@@ -218,7 +219,7 @@ export default function AgentsOperate() {
 
         <Reveal delay={0.15}>
           <a
-            href="#portfolio"
+            href={ROUTES.solutions}
             className="mt-10 inline-flex items-center gap-2 font-medium text-accent"
           >
             View Full Portfolio →

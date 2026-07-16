@@ -1,16 +1,7 @@
 "use client";
 
 import { motion } from "framer-motion";
-
-const NAV = [
-  "About",
-  "Services",
-  "Solutions",
-  "Trainings",
-  "Consultation",
-  "Events",
-  "Blog",
-];
+import { CONSULT_HREF, PRIMARY_NAV, ROUTES } from "@/lib/nav";
 
 export default function Navbar() {
   return (
@@ -21,7 +12,7 @@ export default function Navbar() {
       className="fixed inset-x-0 top-0 z-50 bg-black"
     >
       <nav className="mx-auto flex h-16 max-w-[1400px] items-center justify-between px-6 lg:px-10">
-        <a href="#top" className="group flex items-center">
+        <a href={ROUTES.home} className="group flex items-center">
           {/* eslint-disable-next-line @next/next/no-img-element */}
           <img
             src="/logo.png"
@@ -30,15 +21,16 @@ export default function Navbar() {
           />
         </a>
 
-        <div className="flex items-center gap-7">
-          <div className="hidden items-center gap-7 lg:flex">
-            {NAV.map((item) => (
+        <div className="flex items-center gap-5 xl:gap-7">
+          {/* eight items — tighter until xl has room to breathe */}
+          <div className="hidden items-center gap-4 lg:flex xl:gap-6">
+            {PRIMARY_NAV.map((item) => (
               <a
-                key={item}
-                href="#"
-                className="text-[15px] text-muted transition-colors hover:text-fg"
+                key={item.label}
+                href={item.href}
+                className="text-[14px] text-muted transition-colors hover:text-fg xl:text-[15px]"
               >
-                {item}
+                {item.label}
               </a>
             ))}
           </div>
@@ -46,8 +38,8 @@ export default function Navbar() {
           <span className="hidden h-5 w-px bg-border lg:block" />
 
           <a
-            href="#consult"
-            className="bg-primary-gradient on-accent rounded-lg px-4 py-2 text-[15px] font-semibold transition-transform hover:-translate-y-0.5"
+            href={CONSULT_HREF}
+            className="bg-primary-gradient on-accent rounded-lg px-4 py-2 text-[14px] font-semibold transition-transform hover:-translate-y-0.5 xl:text-[15px]"
           >
             Book a Consultation
           </a>

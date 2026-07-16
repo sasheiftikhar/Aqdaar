@@ -2,6 +2,7 @@
 
 import { motion } from "framer-motion";
 import Reveal from "@/components/ui/Reveal";
+import { ROUTES } from "@/lib/nav";
 
 export default function FinalCta() {
   return (
@@ -47,8 +48,10 @@ export default function FinalCta() {
         </Reveal>
         <Reveal delay={0.2}>
           <div className="mt-10 flex items-center justify-center gap-3">
+            {/* real routes, not on-page anchors — this block renders on every
+                page, and #services only ever existed on the home page */}
             <a
-              href="#consult"
+              href={ROUTES.consultation}
               className="bg-primary-gradient on-accent group flex items-center gap-2 rounded-xl px-7 py-3.5 font-semibold transition-transform hover:-translate-y-0.5"
             >
               Book a Consultation
@@ -57,7 +60,7 @@ export default function FinalCta() {
               </span>
             </a>
             <a
-              href="#services"
+              href={ROUTES.services}
               className="rounded-xl border border-border bg-surface/50 px-7 py-3.5 font-medium text-fg transition-colors hover:bg-surface-2"
             >
               Explore Our Services
