@@ -1,0 +1,651 @@
+@import url('https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,200..800&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&family=Space+Grotesk:wght@300;400;500;600;700&display=swap');
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+  html { scroll-behavior: auto; }
+  body { background: #000000; overflow-x: hidden; }
+
+  /* ---- Intro loader lock: no scroll, no scrollbar while the loader is on screen ---- */
+  html.loader-lock, html.loader-lock body { overflow: hidden !important; }
+  html.loader-lock { scrollbar-width: none; }
+  html.loader-lock::-webkit-scrollbar { display: none; }
+  /* Navbar "Join the network" button: black by default, gradient on hover */
+  .nav-cta {
+    font-family: 'Inter', sans-serif;
+    font-size: 15px;
+    font-weight: 600;
+    color: #ffffff;
+    background: rgba(0,0,0,.32);
+    border: none;
+    padding: 16px 24px;
+    border-radius: 12px;
+    cursor: pointer;
+    -webkit-backdrop-filter: blur(10px);
+    backdrop-filter: blur(10px);
+    box-shadow: inset 0 1px 0 rgba(255,255,255,.08);
+    transition: background .35s ease, transform .2s ease;
+  }
+  .nav-cta:hover {
+    background: linear-gradient(160deg,#06151e,#7B2FBE 70%,#9B59B6);
+  }
+  /* CTA button: white by default, gradient + white text on hover */
+  .cta-light-btn {
+    font-family: 'Inter', sans-serif;
+    font-size: 15px;
+    font-weight: 600;
+    color: #000000;
+    background: #ffffff;
+    border: none;
+    padding: 16px 26px;
+    border-radius: 12px;
+    cursor: pointer;
+    transition: background .35s ease, color .35s ease, transform .2s ease;
+  }
+  .cta-light-btn:hover {
+    background: linear-gradient(160deg,#06151e,#7B2FBE 70%,#9B59B6);
+    color: #ffffff;
+  }
+  /* Navbar links: muted by default, brighten on hover */
+  .nav-link { color: #d8cfe4; text-decoration: none; transition: color .25s ease; }
+  .nav-link:hover { color: #ffffff; }
+  /* Performance card icons: scale up when the card is hovered */
+  .pcard-icon { transition: transform .3s cubic-bezier(.2,.7,.2,1); transform-origin: center; }
+  [data-pcard]:hover .pcard-icon { transform: scale(1.14); }
+  /* Footer links: muted by default, brighten on hover (like nav links) */
+  .footer-link { color: rgba(210,195,230,.48); text-decoration: none; transition: color .25s ease; }
+  .footer-link:hover { color: #ffffff; }
+  @keyframes gridFlow { 0% { background-position: 0 0; } 100% { background-position: 0 80px; } }
+  @keyframes twinkle { 0%,100% { opacity: .35; } 50% { opacity: 1; } }
+  @keyframes floatY { 0%,100% { transform: translateY(0); } 50% { transform: translateY(-10px); } }
+  /* sun rays fanning from top center */
+  @keyframes raysBreath { 0%,100% { opacity: .55; transform: translateX(-50%) scaleY(1) scaleX(1); } 50% { opacity: .9; transform: translateX(-50%) scaleY(1.06) scaleX(1.04); } }
+  @keyframes raysSpin { 0% { transform: translate(-50%, -50%) rotate(0deg); } 100% { transform: translate(-50%, -50%) rotate(360deg); } }
+  @keyframes coreGlow { 0%,100% { opacity: .7; } 50% { opacity: 1; } }
+  /* slow downward drift of the starfield, then loop */
+  @keyframes starDrift { 0% { transform: translateY(-50%); } 100% { transform: translateY(0%); } }
+  @keyframes starDrift2 { 0% { transform: translateY(-40%); } 100% { transform: translateY(0%); } }
+  /* moving shadow sweeping across the top */
+  @keyframes topShadowSweep { 0% { transform: translateX(-35%); } 50% { transform: translateX(35%); } 100% { transform: translateX(-35%); } }
+  /* gentle side-to-side wave for the top beam */
+  @keyframes beamWave { 0% { transform: translateX(-52%) scaleX(1); opacity: .8; } 50% { transform: translateX(-48%) scaleX(1.08); opacity: 1; } 100% { transform: translateX(-52%) scaleX(1); opacity: .8; } }
+  /* slow sway of the whole ray fan */
+  @keyframes rayFan { 0%,100% { transform: rotate(-3deg) scale(1.2); } 50% { transform: rotate(3deg) scale(1.2); } }
+  /* moving blue mesh-gradient blobs for the feature preview */
+  @keyframes blobA { 0%,100% { transform: translate(0,0) scale(1); } 33% { transform: translate(20%,14%) scale(1.28); } 66% { transform: translate(-14%,20%) scale(.92); } }
+  @keyframes blobB { 0%,100% { transform: translate(0,0) scale(1); } 50% { transform: translate(-22%,18%) scale(1.32); } }
+  @keyframes blobC { 0%,100% { transform: translate(0,0) scale(1); } 40% { transform: translate(16%,-16%) scale(1.24); } 70% { transform: translate(-18%,-8%) scale(.95); } }
+  @keyframes blobD { 0%,100% { transform: translate(0,0) scale(1); } 50% { transform: translate(24%,-14%) scale(1.36); } }
+  @keyframes blobE { 0%,100% { transform: translate(0,0) scale(1); } 30% { transform: translate(-24%,-18%) scale(1.3); } 60% { transform: translate(18%,-22%) scale(.9); } }
+  @keyframes blobF { 0%,100% { transform: translate(0,0) scale(1); } 45% { transform: translate(26%,22%) scale(1.28); } 75% { transform: translate(-22%,10%) scale(1.05); } }
+  @keyframes spray { 0%,100% { transform: translate(-50%,-50%) rotate(31deg) scale(1); opacity: .92; } 50% { transform: translate(-50%,-50%) rotate(31deg) scale(1.07); opacity: 1; } }
+  @keyframes spray2 { 0%,100% { transform: translate(-50%,-50%) scale(1); opacity: .9; } 50% { transform: translate(-50%,-50%) scale(1.06); opacity: 1; } }
+  /* infinite horizontal logo marquee (Trusted by teams) — track is duplicated, so -50% loops seamlessly */
+  @keyframes marquee { 0% { transform: translateX(0); } 100% { transform: translateX(-50%); } }
+  .marquee-track { animation: marquee 46s linear infinite; }
+  .marquee-logo { font-family: 'Bricolage Grotesque', sans-serif; font-size: 24px; font-weight: 700; color: rgba(210,195,230,.30); letter-spacing: -0.5px; padding: 0 42px; white-space: nowrap; }
+  /* Cruip-style animated gradient border — faint ring with a bright highlight gliding around the edge */
+  @property --spin-angle { syntax: '<angle>'; inherits: false; initial-value: 0deg; }
+  .spin-border { position: relative; }
+  .spin-border::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    border-radius: inherit;
+    padding: 2.5px;                       /* border thickness */
+    background: conic-gradient(from var(--spin-angle, 0deg),
+      transparent 0deg,
+      transparent 200deg,
+      rgba(214,180,240,.85) 290deg,
+      #ffffff 315deg,
+      rgba(214,180,240,.85) 340deg,
+      transparent 360deg);
+    -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+    -webkit-mask-composite: xor;
+            mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+            mask-composite: exclude;
+    animation: spinBorder 4.5s linear infinite;
+    pointer-events: none;
+    z-index: 2;
+  }
+  @keyframes spinBorder { to { --spin-angle: 360deg; } }
+  /* Team member card — same look + 3D tilt hover as the landing "Via Martinell" card */
+  .team-card { height: 100%; display: flex; flex-direction: column; border-radius: 24px; border: 1px solid rgba(180,120,255,.14); background: linear-gradient(225deg, #030303 0%, #1c1c1c 42%, #333333 52%, #161616 64%, #030303 100%); box-shadow: 0 30px 80px rgba(0,0,0,.5), inset 0 1px 0 rgba(255,255,255,.06); padding: 14px 14px 22px; transition: transform .25s cubic-bezier(.2,.7,.2,1), box-shadow .25s ease; transform-style: preserve-3d; will-change: transform; }
+  /* About-page value cards: icon scales when the card is hovered (same idea as landing pcards) */
+  .vcard-icon { transition: transform .3s cubic-bezier(.2,.7,.2,1); transform-origin: center; }
+  [data-vcard]:hover .vcard-icon { transform: scale(1.14); }
+  /* Blog cards: lift on hover, spin-border handles the animated border */
+  .blog-card { transition: transform .25s cubic-bezier(.2,.7,.2,1); }
+  .blog-card:hover { transform: translateY(-6px); }
+  /* Testimonials — hovering a roster logo brightens it (scroll drives the active state) */
+  [data-testi-go]:hover { opacity: 1 !important; }
+  [data-testi-go] img { transition: opacity .3s ease; }
+
+body { background: #000000; overflow-x: hidden; }
+
+/* ============================================================
+   HERO composition — ONE locked unit (frame + hands)
+   ------------------------------------------------------------
+   A single variable `--frame-w` drives the WHOLE hero box. The frame's
+   width is the variable; its height comes from the aspect-ratio (so it's
+   width-driven too); and every hand value — size + position — is derived
+   from the SAME variable. Result: frame + hands behave as one rigid unit.
+   Change --frame-w and the entire composition scales together; the hands
+   can never drift relative to the screen, at any viewport width OR height.
+
+   Ratios calibrated to the desktop look:
+     hand height   = 0.358 × frame width   (~21.5vw at 60vw)
+     hand bottom   = 50% − 0.4165 × frame width  (glued to the frame's lower edge)
+     hand inset    = 50% − 0.633 × frame width   (gripping just outside the side edge)
+   ============================================================ */
+  [data-hero-stage] { --frame-w: 60vw; }
+  [data-hero-frame] {
+    width: var(--frame-w) !important;
+    aspect-ratio: 1.58 / 1 !important;
+    max-height: 80vh !important;
+  }
+  [data-hand] {
+    height: calc(var(--frame-w) * 0.358) !important;
+    bottom: calc(50% - var(--frame-w) * 0.4165) !important;
+  }
+  [data-hand="left"]  { left:  calc(50% - var(--frame-w) * 0.633) !important; }
+  [data-hand="right"] { right: calc(50% - var(--frame-w) * 0.633) !important; }
+
+  /* The mobile-only AI-report section is hidden everywhere except phones (<=640). */
+  [data-air-mobile] { display: none; }
+
+  /* ---- Mobile menu open/close animation ----
+     The full-screen panel slides DOWN from the top to cover the screen, and the
+     links fade UP into place (staggered). Always rendered (off-screen) so it can
+     transition; `.nav-open` (toggled by JS) brings it on-screen. */
+  [data-nav-menu] {
+    display: flex !important;
+    transform: translateY(-100%);
+    transition: transform .5s cubic-bezier(.2,.8,.2,1);
+    pointer-events: none;
+  }
+  [data-nav-menu].nav-open { transform: translateY(0); pointer-events: auto; }
+  [data-nav-menu] a, [data-nav-menu] .nav-cta {
+    opacity: 0;
+    transform: translateY(22px);
+    transition: opacity .4s ease, transform .5s cubic-bezier(.2,.8,.2,1);
+  }
+  [data-nav-menu].nav-open a, [data-nav-menu].nav-open .nav-cta {
+    opacity: 1;
+    transform: translateY(0);
+  }
+  /* stagger: children are [close-btn, 7 links, cta] → fade them up one after another */
+  [data-nav-menu].nav-open > :nth-child(2) { transition-delay: .12s; }
+  [data-nav-menu].nav-open > :nth-child(3) { transition-delay: .17s; }
+  [data-nav-menu].nav-open > :nth-child(4) { transition-delay: .22s; }
+  [data-nav-menu].nav-open > :nth-child(5) { transition-delay: .27s; }
+  [data-nav-menu].nav-open > :nth-child(6) { transition-delay: .32s; }
+  [data-nav-menu].nav-open > :nth-child(7) { transition-delay: .37s; }
+  [data-nav-menu].nav-open > :nth-child(8) { transition-delay: .42s; }
+  [data-nav-menu].nav-open > :nth-child(9) { transition-delay: .47s; }
+
+/* ============================================================
+   RESPONSIVE — TABLET / iPad portrait (<= 1024px)
+   Landing page · Step 1: NAV + HERO section
+   ============================================================ */
+@media (max-width: 1024px) {
+
+  /* NAV — collapse to logo + hamburger (7 links get cramped at this width).
+     The links move into a full-screen menu toggled by the hamburger. */
+  nav[data-nav] { padding: 20px 24px !important; }
+  nav[data-nav] [data-nav-links] { display: none !important; }
+  nav[data-nav] > .nav-cta       { display: none !important; }
+  nav[data-nav] [data-nav-toggle] { display: block !important; }
+
+  /* Grow the whole locked hero unit so it fills the narrower portrait screen.
+     Only this ONE value changes — frame + hands scale together, placement stays exact. */
+  [data-hero-stage] { --frame-w: 74vw; }
+
+  /* TOP BEAM/SHADOW — drop the 1.4× horizontal stretch so the light beam fits
+     the screen width exactly (height stays driven by vh) instead of spilling out. */
+  [data-hero-beam] { transform: scaleX(1) !important; }
+
+  /* ---- Tablet layout polish — keep the lower sections from looking cramped/odd ---- */
+  /* Meet-the-expert card: the 7fr:3fr split squeezed the text to 1–2 words per
+     line. Give it a balanced 2-up split + a wider card so it reads cleanly. */
+  [data-expert-sec] > div:last-child { padding: 0 24px !important; }
+  [data-tilt-wrap] { width: 100% !important; max-width: 100% !important; }
+  [data-tilt]      { grid-template-columns: 1fr 1fr !important; gap: 24px !important; }
+  /* Trim the oversized inner paddings so content isn't crammed against the borders */
+  [data-ctacard]   { padding: 40px 30px !important; }
+  [data-feat-grid]  { padding: 40px !important; gap: 32px !important; }
+  /* Calm the giant tab labels + stat number so the type sits sensibly */
+  [data-tab-label] { font-size: 36px !important; }
+  [data-stat] > div:first-child { font-size: 66px !important; }
+  /* The expert heading zooms 1.7×→1× on scroll; on a narrow screen that blows it
+     past the edges. Pin it to its normal size here. */
+  [data-expert-h] { transform: none !important; }
+
+  /* AI-report composition — stack vertically (dashboard, then the 3 cards) at
+     tablet widths too, so the cards stop overlapping the dashboard. The block is
+     still fit-to-height + bottom-attached by the JS (height-only on tablet). */
+  [data-air-comp] {
+    position: static !important;
+    height: auto !important;
+    display: flex !important;
+    flex-direction: column !important;
+    gap: 14px !important;
+    margin-top: 16px !important;
+  }
+  [data-air-terminal] {
+    position: static !important;
+    transform: none !important;
+    width: 100% !important;
+    max-width: 100% !important;
+    height: auto !important;
+  }
+  [data-air-comp] [data-fcard] {
+    position: static !important;
+    width: 100% !important;
+    padding: 18px !important;
+  }
+}
+
+/* ============================================================
+   RESPONSIVE — MOBILE (<= 640px)   ·   Landing page
+   Stacks every multi-column layout into one readable column and
+   tames the desktop-sized type. Builds on the tablet rules above.
+   ============================================================ */
+@media (max-width: 640px) {
+
+  /* NAV — logo + hamburger only (hide/show handled in the <=1024 block above) */
+  nav[data-nav] { padding: 16px 18px !important; }
+
+  /* Clip stray horizontal overflow (no black strip) WITHOUT becoming a scroll
+     container — `overflow-x: clip` keeps the hero's position:sticky working, so
+     the frame zooms IN PLACE and the AI-report reveals over it. (Using `hidden`
+     here forces overflow-y to `auto`, which breaks sticky → frame scrolls up.) */
+  [data-page] { overflow-x: clip !important; }
+
+  /* CONSISTENT SIDE GUTTER — never let any section's content glue to the screen
+     edges, and trim the over-wide 48px wrappers so every section lines up at the
+     same ~16–18px margin, whatever the phone width. */
+  [data-page] [style*="padding: 0 48px"]    { padding-left: 18px !important; padding-right: 18px !important; }
+  [data-page] [style*="padding: 80px 48px"] { padding-left: 18px !important; padding-right: 18px !important; }
+  [data-page] [style*="180px 48px"]         { padding-left: 18px !important; padding-right: 18px !important; }
+
+  /* PRIVACY page — keep the desktop-style vertical TOC sidebar, just at a 30/70
+     split on phones (sidebar 30% · content 70%). TOC text shrinks to fit; the
+     sidebar stays sticky and tapping a topic still smooth-scrolls to it. */
+  [data-privacy-grid] { grid-template-columns: 30% 1fr !important; gap: 16px !important; }
+  [data-privacy-toc] { top: 80px !important; }
+  [data-privacy-toc] nav a { font-size: 11px !important; padding: 7px 7px 7px 9px !important; line-height: 1.3 !important; }
+  [data-privacy-grid] [id] { scroll-margin-top: 80px; }
+
+  /* HERO — keep the scroll-zoom mechanism, just lay it out for phones:
+       • TEXT sits at the TOP (below the nav, with breathing room)
+       • the FRAME sits in the LOWER ~2/3 of the screen, zooming IN PLACE on scroll
+     The in-hero fit-scaled AI-report is HIDDEN on phones (it was too small); the
+     full-width [data-air-mobile] section is shown right after instead. The hero is
+     shortened so the zoom plays then hands off to that section. */
+  [data-hero] { height: 165vh !important; }
+  [data-air-overlay] { display: none !important; }
+  [data-air-mobile] { display: block !important; }
+  [data-hero-content] {
+    justify-content: flex-start !important;
+    padding-top: 14vh !important;
+  }
+  [data-hero-stage] {
+    --frame-w: 76vw;
+    top: auto !important;
+    bottom: 0 !important;
+    height: 66vh !important;
+  }
+
+  /* Stop the dashboard's intrinsic min-content width from stretching the
+     whole report block wider than the screen (centring it → clipped on both sides).
+     min-width:0 lets each flex item shrink to the screen; the terminal clips its
+     own dashboard overflow internally. */
+  [data-air-overlay], [data-air-inner], [data-air-comp],
+  [data-air-terminal], [data-air-comp] [data-fcard] {
+    min-width: 0 !important;
+    max-width: 100% !important;
+  }
+  /* (the vertical-stack rules for [data-air-comp]/terminal/cards live in the <=1024 block) */
+
+  /* Compact the report's heading/sub/gaps + drop the dashboard's tall min-height
+     so the stacked block isn't so tall → it gets scaled down far less → the
+     dashboard + cards + their headings render LARGER and readable on phones. */
+  [data-air-head] { font-size: 22px !important; line-height: 1.18 !important; }
+  [data-air-sub]  { font-size: 12.5px !important; line-height: 1.45 !important; margin-top: 10px !important; }
+  [data-air-comp] { gap: 10px !important; margin-top: 12px !important; }
+  [data-dash]     { min-height: 0 !important; }
+
+  /* FEATURES — stack the two columns; shrink the oversized tab labels */
+  [data-feat-grid] { grid-template-columns: 1fr !important; padding: 30px 22px !important; gap: 26px !important; }
+  [data-tab-label]  { font-size: 30px !important; }
+
+  /* PERFORMANCE — stack the 3 explanation columns */
+  [data-perf-cols] { grid-template-columns: 1fr !important; gap: 40px !important; }
+
+  /* QUINN dashboard mock — 4-up grids become 2-up. minmax(0,1fr) lets the
+     columns shrink below their content so the dashboard never pushes wider
+     than its frame (which is what was spilling off-screen). */
+  [data-dash-grid] { grid-template-columns: minmax(0,1fr) minmax(0,1fr) !important; }
+
+  /* MEET THE EXPERT — full-width card, stacked logo + text.
+     Trim the section's 48px side padding and let the card fill it so it sits
+     dead-centre (90vw was wider than the padded container → it spilled right). */
+  [data-expert-sec] > div:last-child { padding: 0 16px !important; }
+  [data-tilt-wrap] { width: 100% !important; max-width: 100% !important; }
+  [data-tilt]      { grid-template-columns: 1fr !important; gap: 16px !important; }
+
+  /* CTA + STATS — stack, un-stick the left column, calm the huge stat numbers */
+  [data-ctacard]   { padding: 36px 22px !important; }
+  [data-ctastats]  { grid-template-columns: 1fr !important; gap: 40px !important; }
+  [data-sticky-left] { position: static !important; }
+  [data-stat] > div:first-child { font-size: 58px !important; }
+
+  /* CTA band (shared) — same checkerboard design, but a touch taller on phones
+     (6 cols → 4 rows) so the centered headline + button have breathing room and
+     don't touch the band's top/bottom corners. Text sized for mobile. */
+  [data-cta-checker] { grid-template-columns: repeat(6, 1fr) !important; }
+  /* The 24 squares' colours are hand-arranged for an 8-col checkerboard, so they
+     break when re-wrapped to 6 cols. Re-paint them here for a correct 6-col
+     checkerboard (row: P B P B P B / B P B P B P, repeating every 2 rows = 12). */
+  [data-cta-checker] > div:nth-child(12n+1),
+  [data-cta-checker] > div:nth-child(12n+3),
+  [data-cta-checker] > div:nth-child(12n+5),
+  [data-cta-checker] > div:nth-child(12n+8),
+  [data-cta-checker] > div:nth-child(12n+10),
+  [data-cta-checker] > div:nth-child(12n+12) { background: linear-gradient(135deg,#7B2FBE,#0a0a0a) !important; }
+  [data-cta-checker] > div:nth-child(12n+2),
+  [data-cta-checker] > div:nth-child(12n+4),
+  [data-cta-checker] > div:nth-child(12n+6),
+  [data-cta-checker] > div:nth-child(12n+7),
+  [data-cta-checker] > div:nth-child(12n+9),
+  [data-cta-checker] > div:nth-child(12n+11) { background: #000000 !important; }
+  [data-cta-text] { padding: 30px 22px !important; }
+  [data-cta-text] h2 { font-size: clamp(24px, 7vw, 40px) !important; }
+  [data-cta-text] .cta-light-btn { padding: 11px 20px !important; font-size: 13px !important; margin-top: 18px !important; }
+
+  /* FOOTER — 2 columns: LEFT = logo + intro + socials,
+     RIGHT = Pages (top) + Information (below). (DOM order is logo, Pages, Information.) */
+  [data-footer-grid] { grid-template-columns: 1fr 1fr !important; gap: 30px 20px !important; }
+  [data-footer-grid] > div:nth-child(1) { grid-column: 1 !important; grid-row: 1 / span 2 !important; }
+  [data-footer-grid] > div:nth-child(2) { grid-column: 2 !important; grid-row: 1 !important; }
+  [data-footer-grid] > div:nth-child(3) { grid-column: 2 !important; grid-row: 2 !important; }
+  [data-footer-bottom] { flex-direction: column !important; gap: 12px !important; }
+}
+
+/* ============================================================
+   RESPONSIVE — TESTIMONIALS split slider
+   The pinned horizontal-scroll effect is a desktop/tablet treat. Below ~900px
+   we drop the pin entirely: the section becomes a normal stacked block — dark
+   logo roster on top, then both quotes stacked and scrolled vertically.
+   ============================================================ */
+@media (max-width: 900px) {
+  /* Mobile keeps the SAME pinned horizontal scroll: heading stays fixed on top, then
+     a full-width slider where each slide = brand logo (top) + its quote (bottom).
+     Scrolling swipes sideways to the next testimonial, then releases to vertical. */
+  [data-testi-head]     { flex: 0 0 auto !important; padding: 30px 22px 20px !important; }
+  [data-testi-head] h2  { font-size: clamp(23px, 6.4vw, 34px) !important; }
+  [data-testi-head] > div { margin-bottom: 12px !important; }
+  /* drop the desktop left logo column — logos now live inside each slide */
+  [data-testi-left]  { display: none !important; }
+  [data-testi-grid]  { grid-template-columns: 1fr !important; }
+  /* reveal the per-slide logo, pinned to the slide's top-left; quote sits at the bottom */
+  [data-testi-slide-logo] {
+    display: block !important;
+    max-width: 190px !important; max-height: 50px !important;
+    width: auto !important; height: auto !important;
+    object-fit: contain !important; object-position: left center !important;
+    margin-bottom: auto !important;
+  }
+  [data-testi-track] > [data-testi-slide] { justify-content: flex-start !important; padding: 30px 22px 60px !important; }
+}
+@media (max-width: 520px) {
+  [data-testi-slide-logo] { max-width: 160px !important; max-height: 44px !important; }
+  [data-testi-head] h2    { font-size: clamp(22px, 6.6vw, 30px) !important; }
+}
+
+/* ============================================================
+   RESPONSIVE — CONTACT page (<= 900px: phones + portrait tablets)
+   ============================================================ */
+@media (max-width: 900px) {
+  /* stack the info column above the form */
+  [data-contact-grid] { grid-template-columns: 1fr !important; gap: 40px !important; }
+  /* form name/email + each two-up row → one field per line */
+  [data-form-row]     { grid-template-columns: 1fr !important; }
+  /* map fills the width instead of a fixed 70% */
+  [data-contact-map]  { width: 100% !important; max-width: 640px !important; }
+}
+@media (max-width: 640px) {
+  /* trim the map section's 48px side padding to the standard mobile gutter */
+  [data-page] [style*="10px 48px"] { padding-left: 18px !important; padding-right: 18px !important; }
+  /* contact info cards: one per row on small phones so they don't squeeze */
+  [data-contact-grid] [style*="grid-template-columns: 1fr 1fr"] { grid-template-columns: 1fr !important; }
+}
+
+/* ============================================================
+   RESPONSIVE — FOR-BUSINESS (Quinn) page  ·  scoped to [data-page="business"]
+   Every feature row is a 1fr-1fr split, the problem strip is repeat(3,1fr),
+   and the hero mock is 1fr+360px — all need to collapse below tablet. Scoped
+   so the padding-substring rules can't leak onto other pages.
+   ============================================================ */
+@media (max-width: 1024px) {
+  /* mid-tablet: pull in the two-column feature rows a touch so the 60px gap
+     + 48px gutters don't crush the columns before they stack at 900 */
+  [data-page="business"] [data-fb-row] { gap: 40px !important; }
+}
+@media (max-width: 900px) {
+  /* HERO mockup: inbox list + 360px conversation panel → stack vertically */
+  [data-fb-heromock] { grid-template-columns: 1fr !important; min-height: 0 !important; }
+  /* when stacked, the right panel's left border reads as a stray vertical line */
+  [data-fb-heromock] > div:last-child { border-left: none !important; border-top: 1px solid rgba(255,255,255,.06) !important; }
+  /* feature rows → single column */
+  [data-fb-row]     { grid-template-columns: 1fr !important; gap: 34px !important; }
+  /* always show the heading/copy above its visual on stacked screens
+     (keeps reversed rows from leading with the mockup) */
+  [data-fb-row] > [data-fb-copy] { order: -1; }
+  /* problem cards 3-up → stacked */
+  [data-fb-problem] { grid-template-columns: 1fr !important; }
+  /* contact/help cards 2-up → stacked + centred with a sensible max width so a
+     single card doesn't stretch the full tablet width */
+  [data-fb-contact] { grid-template-columns: 1fr !important; max-width: 460px !important; margin-left: auto !important; margin-right: auto !important; }
+}
+@media (max-width: 520px) {
+  /* Schedule-a-Demo input + button: stack so neither gets squeezed on phones */
+  [data-demo-row] { flex-direction: column !important; align-items: stretch !important; gap: 10px !important; padding: 12px !important; }
+  [data-demo-row] [data-book-demo] { width: 100% !important; padding-top: 12px !important; padding-bottom: 12px !important; }
+}
+@media (max-width: 640px) {
+  /* pull every for-business section's 48px side padding to the mobile gutter */
+  [data-page="business"] [style*="150px 48px"],
+  [data-page="business"] [style*="40px 48px"],
+  [data-page="business"] [style*="30px 48px"] { padding-left: 18px !important; padding-right: 18px !important; }
+  /* hero top padding is tall for the nav — keep it, just trim sides above */
+  [data-page="business"] [style*="150px 48px"] { padding-top: 120px !important; }
+  /* closing-CTA inner band: tighten the 70/40 padding for phones */
+  [data-page="business"] [style*="70px 40px"] { padding: 48px 22px !important; }
+  /* analytics stat grid → one per row */
+  [data-fb-stats] { grid-template-columns: 1fr !important; }
+  [data-fb-stats] > div[style*="grid-column"] { grid-column: auto !important; }
+  /* feature-row visuals: drop heavy inner padding so cards aren't cramped */
+  [data-fb-row] [data-reveal-up] { padding-left: 14px !important; padding-right: 14px !important; }
+}
+
+/* ============================================================
+   RESPONSIVE — BLOG page  ·  scoped to [data-page="blog"]
+   Featured post is a 1fr-1fr split (image | text) and the post grid is
+   repeat(4,1fr); both collapse below tablet so cards stay readable.
+   ============================================================ */
+@media (max-width: 1024px) {
+  /* 4-up → 3-up so cards keep a usable width on small laptops/tablets */
+  [data-blog-grid] { grid-template-columns: repeat(3, 1fr) !important; }
+}
+@media (max-width: 900px) {
+  /* FEATURED post → stack image over text; tame the tall image + big padding */
+  [data-blog-featured] { grid-template-columns: 1fr !important; }
+  [data-blog-featured] > div:first-child { min-height: 220px !important; }
+  [data-blog-featured] > div:last-child  { padding: 30px 26px !important; }
+  /* post grid 3-up → 2-up */
+  [data-blog-grid] { grid-template-columns: repeat(2, 1fr) !important; }
+}
+@media (max-width: 600px) {
+  /* one post per row on phones so titles + excerpts read cleanly */
+  [data-blog-grid] { grid-template-columns: 1fr !important; }
+  [data-blog-featured] > div:last-child { padding: 26px 20px !important; }
+}
+@media (max-width: 640px) {
+  /* hero: trim the 48px side padding to the mobile gutter + shorten the tall top */
+  [data-page="blog"] [data-blog-hero] { padding: 130px 18px 70px !important; }
+}
+
+/* ============================================================
+   RESPONSIVE — PRODUCT (platform) page  ·  scoped to [data-page="product"]
+   Animations stay ON at every size. The pinned/scroll-driven sections keep
+   pinning and switching — they just re-flow to a vertical layout on smaller
+   screens (nothing is disabled or made static).
+   ============================================================ */
+@media (max-width: 1024px) {
+  /* building blocks 3-up → 2-up */
+  [data-fw-grid] { grid-template-columns: repeat(2, 1fr) !important; }
+
+  /* FEATURE TABS — keep the EXACT desktop structure: top horizontal line, left
+     vertical line, heading rail + moving dot. Only the right side re-flows: the
+     content sits top-right and the image at the bottom-right. Panels still swap. */
+  [data-tabs-body]  { padding-right: 24px !important; }
+  [data-tabs-inner] { grid-template-columns: minmax(120px, 180px) 1fr !important; grid-template-rows: auto auto !important; gap: 20px 30px !important; align-items: center !important; }
+  [data-tabs-nav]   { grid-column: 1 !important; grid-row: 1 / 3 !important; align-self: center !important; padding-left: 22px !important; }
+  [data-tab-h]      { padding: 13px 0 !important; font-size: 14px !important; }
+  [data-tabs-col]:nth-of-type(2) { grid-column: 2 !important; grid-row: 1 !important; height: 250px !important; }  /* content (top-right) */
+  [data-tabs-col]:nth-of-type(3) { grid-column: 2 !important; grid-row: 2 !important; height: 40vh !important; }  /* image (bottom-right) */
+  [data-tab-content]    { justify-content: center !important; }
+  [data-tab-content] h3 { font-size: 26px !important; margin-bottom: 12px !important; }
+  [data-tab-content] p  { font-size: 14.5px !important; line-height: 1.6 !important; margin-bottom: 16px !important; display: -webkit-box !important; -webkit-line-clamp: 6 !important; -webkit-box-orient: vertical !important; overflow: hidden !important; }
+  [data-tab-panel]      { border-right: 1px dashed rgba(180,120,255,.4) !important; border-radius: 14px !important; }
+}
+@media (max-width: 640px) {
+  /* gutters for every product section */
+  [data-page="product"] [style*="160px 48px"],
+  [data-page="product"] [style*="90px 48px"],
+  [data-page="product"] [style*="30px 48px"],
+  [data-page="product"] [style*="46px 48px"] { padding-left: 18px !important; padding-right: 18px !important; }
+  [data-page="product"] [data-prod-hero] { padding-top: 130px !important; }
+
+  /* feature tabs: tighten the rail so the right side keeps usable width on phones */
+  [data-tabs-body]  { padding-right: 16px !important; }
+  [data-tabs-inner] { grid-template-columns: minmax(90px, 124px) 1fr !important; gap: 16px 14px !important; }
+  [data-tabs-nav]   { padding-left: 14px !important; }
+  [data-tab-h]      { font-size: 12px !important; padding: 10px 0 !important; }
+  [data-tabs-col]:nth-of-type(2) { height: 222px !important; }
+  [data-tabs-col]:nth-of-type(3) { height: 32vh !important; }
+  [data-tab-content] h3 { font-size: 19px !important; }
+  [data-tab-content] p  { font-size: 12.5px !important; -webkit-line-clamp: 5 !important; }
+
+  /* converging split → stacked; hide the central divider (the graphic above keeps
+     its own animated trunk + dot, which the script retargets to the graphic base) */
+  [data-prod-divider] { display: none !important; }
+  [data-prod-split]   { grid-template-columns: 1fr !important; padding-top: 8px !important; }
+  [data-prod-split] > div { padding: 0 0 18px 0 !important; }
+
+  /* building blocks + stats → single column */
+  [data-fw-head]  { grid-template-columns: 1fr !important; gap: 16px !important; margin-bottom: 34px !important; }
+  [data-fw-grid]  { grid-template-columns: 1fr !important; gap: 32px !important; }
+  [data-prod-stats] { grid-template-columns: 1fr !important; gap: 34px !important; }
+}
+
+/* ============================================================
+   RESPONSIVE — TEAM / ABOUT page
+   Every section is a fixed repeat(4,1fr) / 1fr-1fr grid on desktop,
+   plus the values section uses a hand-tuned 4-across "staircase"
+   (margin-top 0/86/172/258 + grid-column 1..4). Both break below
+   ~1024px, so collapse them to fewer columns and reset the stagger.
+   ============================================================ */
+@media (max-width: 1024px) {
+  /* HERO + MISSION — pull the 48px side padding in (these two aren't
+     caught by the generic mobile gutter rules, which match exact strings). */
+  [data-team-hero]    { padding-left: 24px !important; padding-right: 24px !important; }
+  [data-team-mission] { padding-left: 24px !important; padding-right: 24px !important; }
+
+  /* VALUES — keep the diagonal "staircase" feel, just in 2 columns. Clear the
+     desktop 4-col placement, then drop the right-hand column (even cards) so the
+     pills zig-zag down the grid exactly like the desktop layout does at 4-wide. */
+  [data-team-values] { grid-template-columns: repeat(2, 1fr) !important; row-gap: 18px !important; column-gap: 18px !important; }
+  [data-team-values] > div { grid-column: auto !important; margin-top: 0 !important; padding-right: 14px !important; }
+  [data-team-values] > div:nth-child(even) { margin-top: 70px !important; }
+  [data-team-values] p { max-width: 100% !important; }
+
+  /* LEADERSHIP — was 2 cards parked in the middle of a 4-col grid. Drop to a
+     real 2-col grid and clear the explicit grid-column placement on the cards. */
+  [data-team-leaders] { grid-template-columns: repeat(2, 1fr) !important; max-width: 760px !important; }
+  [data-team-leaders] > div { grid-column: auto !important; }
+
+  /* MEMBERS — 4-up → 3-up so the portrait cards keep a sensible size. */
+  [data-team-members] { grid-template-columns: repeat(3, 1fr) !important; }
+}
+
+@media (max-width: 640px) {
+  [data-team-hero]    { padding: 120px 18px 60px !important; }
+  [data-team-mission] { padding-left: 18px !important; padding-right: 18px !important; }
+
+  /* VALUES — single clean column on phones; drop the iPad staircase offset.
+     Each pill keeps a subtle left accent bar so the section still feels designed
+     rather than a plain list. */
+  [data-team-values] { grid-template-columns: 1fr !important; row-gap: 24px !important; }
+  [data-team-values] > div { padding-right: 0 !important; padding-left: 14px !important; border-left: 2px solid rgba(180,120,255,.22) !important; }
+  [data-team-values] > div:nth-child(even) { margin-top: 0 !important; }
+
+  /* LEADERSHIP + MEMBERS — one person per row so the portrait cards stay clean.
+     Constrain + centre so a single full-width card doesn't blow up huge. */
+  [data-team-leaders] { grid-template-columns: 1fr !important; max-width: 340px !important; }
+  [data-team-members] { grid-template-columns: 1fr !important; gap: 18px !important; max-width: 340px !important; margin-left: auto !important; margin-right: auto !important; }
+
+  /* WHY-WORK stats: 4-up → 2×2; BEHIND-THE-SCENES: side-by-side → stacked */
+  [data-team-stats]  { grid-template-columns: 1fr 1fr !important; }
+  [data-team-behind] { grid-template-columns: 1fr !important; gap: 32px !important; }
+}
+
+/* ============================================================
+   INTRO LOADER — mobile responsiveness
+   The ring's percent / counter / odometer animations are all
+   absolute px values, so we scale the WHOLE ring block uniformly
+   (transform: scale) instead of resizing pieces — this keeps every
+   animation pixel-perfect, just smaller. Negative margins reclaim
+   the layout space the scale frees up so the tagline sits snug and
+   the whole cluster stays pinned to the bottom-left.
+   ============================================================ */
+@media (max-width: 640px) {
+  .loader-cluster {
+    left: 24px !important;
+    bottom: 30px !important;
+    gap: 14px !important;
+    align-items: flex-end !important;
+  }
+  .loader-ring {
+    transform: scale(0.62);
+    transform-origin: bottom left;
+    /* 230 * (1 - 0.62) ≈ 88px freed on the right — pull the tagline back in */
+    margin-right: -88px !important;
+  }
+  .loader-tagline {
+    padding-bottom: 6px !important;
+    max-width: 160px !important;
+  }
+  .loader-tagline p {
+    font-size: 10px !important;
+    line-height: 1.55 !important;
+    letter-spacing: 0.14em !important;
+  }
+  .loader-copy {
+    right: 24px !important;
+    bottom: 30px !important;
+  }
+  .loader-copy span {
+    font-size: 10px !important;
+    letter-spacing: 0.24em !important;
+  }
+}
+
+/* Extra-small phones: shrink a touch more so nothing crowds the edge. */
+@media (max-width: 380px) {
+  .loader-ring {
+    transform: scale(0.52);
+    margin-right: -110px !important; /* 230 * (1 - 0.52) ≈ 110px */
+  }
+  .loader-tagline { max-width: 140px !important; }
+}
