@@ -104,13 +104,21 @@ export default function Footer() {
         </div>
       </div>
 
-      {/* full-bleed brand logo — scales to fill the viewport width */}
-      <div className="pointer-events-none relative mt-16 w-full select-none overflow-hidden px-6">
+      {/*
+        Full-width brand wordmark, directly above the copyright bar.
+
+        The signature script rides above the letters and the "q" descends below
+        them, so this block deliberately does NOT clip: no overflow-hidden and
+        no vertical nudge. `w-full h-auto` scales the artwork proportionally at
+        every width — never stretched, cropped, or distorted — and the px-6 /
+        max-w-[1300px] pair matches the footer columns above it exactly.
+      */}
+      <div className="pointer-events-none relative mt-16 w-full select-none px-6 pb-10">
         {/* eslint-disable-next-line @next/next/no-img-element */}
         <img
-          src="/logo.png"
+          src="/aqdaar-wordmark.png"
           alt="Aqdaar"
-          className="mx-auto w-full max-w-[1300px] translate-y-[10%] object-contain"
+          className="mx-auto block h-auto w-full max-w-[1300px]"
         />
       </div>
 
