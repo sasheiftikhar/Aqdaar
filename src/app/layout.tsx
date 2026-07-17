@@ -36,8 +36,9 @@ export default function RootLayout({
       className={`${sans.variable} ${mono.variable} ${script.variable}`}
     >
       <body>
-        <PageTransition />
-        {children}
+        {/* Owns the stair transition, the first-open loading screen, and the
+            signal that tells entrance animations when they may run. */}
+        <PageTransition>{children}</PageTransition>
       </body>
     </html>
   );

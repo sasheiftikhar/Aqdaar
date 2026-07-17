@@ -2,7 +2,25 @@
 
 import { motion } from "framer-motion";
 import { useEffect, useState } from "react";
+import { useIntroReady } from "@/components/intro/ready";
 import { ROUTES } from "@/lib/nav";
+
+/**
+ * Entrance variants for everything in the hero.
+ *
+ * These are one-shot mount animations, so on a first open they would play out
+ * and finish behind the intro loading screen, leaving a lifeless hero at the
+ * exact moment the stairs reveal it. Driving them from variants lets the one
+ * `animate` on the wrapper hold the whole hero at its first frame until the
+ * intro hands over — framer propagates the label down to every child below
+ * that declares `variants`, however deeply nested.
+ */
+const rise = (y: number) => ({
+  wait: { opacity: 0, y },
+  enter: { opacity: 1, y: 0 },
+});
+
+const fade = { wait: { opacity: 0 }, enter: { opacity: 1 } };
 
 /* ------------------------------------------------------------------ */
 /* One SVG holds the globe and the green pulses flowing along its lines */
@@ -121,8 +139,7 @@ function Terminal() {
         {TERMINAL.map((line, i) => (
           <motion.div
             key={i}
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
+            variants={fade}
             transition={{ delay: 0.4 + i * 0.12, duration: 0.25 }}
             className={`whitespace-pre ${TONE[line.tone]}`}
           >
@@ -157,9 +174,14 @@ const THIRD_LINE = "Becho.";
 
 export default function Hero() {
   const [typed, setTyped] = useState(0);
+  const ready = useIntroReady();
 
   // Loop the third heading line forever: type → hold → erase → hold → repeat.
+  // Held until the intro hands over, or the word would type itself out behind
+  // the loading screen and be sitting there finished on reveal.
   useEffect(() => {
+    if (!ready) return;
+
     let timer: ReturnType<typeof setTimeout>;
     let phase: "typing" | "deleting" = "typing";
     let n = 0;
@@ -188,7 +210,7 @@ export default function Hero() {
 
     timer = setTimeout(tick, 1400); // initial delay on load
     return () => clearTimeout(timer);
-  }, []);
+  }, [ready]);
 
   return (
     <section id="top" className="relative overflow-hidden bg-bg pb-16">
@@ -199,20 +221,22 @@ export default function Hero() {
           <HeroGraphic />
         </div>
 
-        <div className="relative mx-auto max-w-[820px] px-6 pt-28 pb-20 text-center">
+        <motion.div
+          className="relative mx-auto max-w-[820px] px-6 pt-28 pb-20 text-center"
+          initial="wait"
+          animate={ready ? "enter" : "wait"}
+        >
           <h1 className="display text-[13vw] font-extrabold uppercase leading-[0.95] tracking-[-0.03em] text-fg sm:text-6xl lg:text-[4rem]">
             <motion.span
               className="block"
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
+              variants={rise(20)}
               transition={{ duration: 1.1, ease: [0.22, 1, 0.36, 1] }}
             >
               Dhundo.
             </motion.span>
             <motion.span
               className="block"
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
+              variants={rise(20)}
               transition={{ duration: 1.1, delay: 0.5, ease: [0.22, 1, 0.36, 1] }}
             >
               Banao.
@@ -228,8 +252,7 @@ export default function Hero() {
           </h1>
 
           <motion.p
-            initial={{ opacity: 0, y: 12 }}
-            animate={{ opacity: 1, y: 0 }}
+            variants={rise(12)}
             transition={{ duration: 0.6, delay: 0.35 }}
             className="mx-auto mt-6 max-w-xl text-lg font-medium text-fg/90"
           >
@@ -237,8 +260,7 @@ export default function Hero() {
           </motion.p>
 
           <motion.p
-            initial={{ opacity: 0, y: 12 }}
-            animate={{ opacity: 1, y: 0 }}
+            variants={rise(12)}
             transition={{ duration: 0.6, delay: 0.5 }}
             className="mx-auto mt-5 max-w-2xl text-[15px] leading-relaxed text-muted"
           >
@@ -249,8 +271,7 @@ export default function Hero() {
           </motion.p>
 
           <motion.div
-            initial={{ opacity: 0, y: 12 }}
-            animate={{ opacity: 1, y: 0 }}
+            variants={rise(12)}
             transition={{ duration: 0.6, delay: 0.65 }}
             className="mt-8 flex flex-col items-center justify-center gap-4 sm:flex-row"
           >
@@ -270,8 +291,7 @@ export default function Hero() {
           </motion.div>
 
           <motion.p
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
+            variants={fade}
             transition={{ duration: 0.6, delay: 0.8 }}
             className="mt-7 flex items-center justify-center gap-2 text-sm font-medium uppercase tracking-wide text-muted"
           >
@@ -280,8 +300,7 @@ export default function Hero() {
           </motion.p>
 
           <motion.p
-            initial={{ opacity: 0, y: 8 }}
-            animate={{ opacity: 1, y: 0 }}
+            variants={rise(8)}
             transition={{ duration: 0.8, delay: 0.95 }}
             className="mt-3 text-2xl text-accent"
             style={{ fontFamily: "var(--font-script)" }}
@@ -290,14 +309,13 @@ export default function Hero() {
           </motion.p>
 
           <motion.div
-            initial={{ opacity: 0, y: 24 }}
-            animate={{ opacity: 1, y: 0 }}
+            variants={rise(24)}
             transition={{ duration: 0.7, delay: 1.05 }}
             className="mt-12"
           >
             <Terminal />
           </motion.div>
-        </div>
+        </motion.div>
       </div>
 
       {/* trusted-by — pill sits right at the earth's bottom edge */}

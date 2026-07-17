@@ -2,6 +2,7 @@
 
 import { motion } from "framer-motion";
 import type { ReactNode } from "react";
+import { useIntroReady } from "@/components/intro/ready";
 
 type RevealProps = {
   children: ReactNode;
@@ -21,11 +22,19 @@ export default function Reveal({
   y = 18,
   className,
 }: RevealProps) {
+  const ready = useIntroReady();
+
   return (
     <motion.div
       className={className}
       initial={{ opacity: 0, y }}
-      whileInView={{ opacity: 1, y: 0 }}
+      // Resolves to the initial frame until the intro hands over: `once: true`
+      // means anything already on screen behind the loading screen would
+      // otherwise burn its single shot at animating while nobody could see it.
+      // Note this stays a real target rather than going undefined — framer
+      // enables the viewport observer based on this prop, and dropping it would
+      // leave the observer unregistered and the element stuck hidden.
+      whileInView={ready ? { opacity: 1, y: 0 } : { opacity: 0, y }}
       viewport={{ once: true, margin: "-80px" }}
       transition={{ duration: 0.6, delay, ease: [0.22, 1, 0.36, 1] }}
     >

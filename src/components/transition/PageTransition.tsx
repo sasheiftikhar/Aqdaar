@@ -13,23 +13,49 @@
  * Navigation is intercepted at the document level rather than through a
  * <TransitionLink> wrapper: the site links with plain <a> tags in ~30 places,
  * and a single listener covers all of them plus anything added later.
+ *
+ * The route can only be swapped once the stairs are all the way down, so
+ * whatever the swap still has to fetch at that point is dead time the user
+ * spends parked on a black screen. Two things keep that at zero, and between
+ * them they are the whole performance story here:
+ *
+ *  1. Every route is warmed in the background shortly after first paint, so by
+ *     the time anything is clicked the payload is usually already in hand.
+ *  2. A click waits for its route to be warm before the stairs start moving
+ *     (the `loading` phase). Any wait that's left therefore happens on the page
+ *     the user is still looking at, rather than behind black — the animation
+ *     itself only ever runs as one continuous drop-and-lift.
  */
 
-import { useCallback, useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState, type ReactNode } from "react";
 import { usePathname, useRouter } from "next/navigation";
 import { motion, useReducedMotion, type Variants } from "framer-motion";
+import IntroLoader from "@/components/intro/IntroLoader";
+import { IntroReadyContext } from "@/components/intro/ready";
 import { ROUTES } from "@/lib/nav";
+
+const DEV = process.env.NODE_ENV === "development";
 
 /** More columns = finer staircase, but a longer total sweep. Six reads well. */
 const COLUMNS = 6;
 /** How long one column takes to travel a full screen height. */
-const DURATION = 0.42;
+const DURATION = 0.36;
 /** Offset between adjacent columns — this is what makes it a staircase. */
-const STAGGER = 0.05;
+const STAGGER = 0.035;
 /** easeInOutQuart — no hard start/stop at either end of the travel. */
 const EASE = [0.76, 0, 0.24, 1] as const;
-/** If a route never lands, don't strand the user behind a black screen. */
-const NAV_TIMEOUT_MS = 2500;
+/**
+ * Last resort if a route never lands. Generous in development, where routes
+ * compile on first request and a cold page legitimately takes seconds; in
+ * production every route is prefetched, so this should never trip.
+ */
+const NAV_BAIL_MS = DEV ? 15000 : 4000;
+/**
+ * How long a click will wait for its route before the stairs start anyway. This
+ * is a backstop, not a tuning knob — it only exists so a hung request can't
+ * swallow the click for good, and a warm route clears it in a single tick.
+ */
+const READY_CAP_MS = DEV ? 8000 : 2500;
 
 /** Brand gradient endpoints — lavender to mint, matching .bg-primary-gradient. */
 const LAVENDER = [202, 191, 225] as const;
@@ -47,21 +73,41 @@ function edgeColor(index: number, alpha: number) {
   return `rgba(${r}, ${g}, ${b}, ${alpha})`;
 }
 
-type Phase = "idle" | "covering" | "covered" | "revealing";
+/**
+ * `intro` is the loading screen holding the landing page on first open, and
+ * `loading` is a click waiting for its route. Neither has moved the stairs yet;
+ * both hand off to `covering`, and from there the sequence is identical — the
+ * intro simply has no route to push when it gets there.
+ */
+type Phase =
+  | "intro"
+  | "idle"
+  | "loading"
+  | "covering"
+  | "covered"
+  | "revealing";
+
+/** Phases where the stairs are parked off screen and cover nothing. */
+const RESTING = new Set<Phase>(["intro", "idle", "loading"]);
 
 const container: Variants = {
+  intro: {},
   idle: {},
+  loading: {},
   covering: { transition: { staggerChildren: STAGGER } },
   covered: {},
   revealing: { transition: { staggerChildren: STAGGER } },
 };
 
 /**
- * `idle` and `revealing` share a resting position, so the revealing -> idle
- * reset is a no-op rather than a visible snap back down.
+ * Every phase before the drop shares `revealing`'s resting position, so arming
+ * a transition and resetting after one are both no-ops rather than a visible
+ * snap.
  */
 const column: Variants = {
+  intro: { y: "-100%" },
   idle: { y: "-100%" },
+  loading: { y: "-100%" },
   covering: { y: "0%", transition: { duration: DURATION, ease: EASE } },
   covered: { y: "0%" },
   revealing: { y: "-100%", transition: { duration: DURATION, ease: EASE } },
@@ -74,13 +120,12 @@ function internalTarget(event: MouseEvent): URL | null {
   if (event.metaKey || event.ctrlKey || event.shiftKey || event.altKey) {
     return null;
   }
+
   const node = event.target;
   if (!(node instanceof Element)) return null;
-  return internalHref(node.closest("a"));
-}
-
-function internalHref(anchor: HTMLAnchorElement | null): URL | null {
+  const anchor = node.closest("a");
   if (!anchor) return null;
+
   if (anchor.hasAttribute("download")) return null;
   if (anchor.target && anchor.target !== "_self") return null;
   // Escape hatch: <a data-no-transition> navigates normally.
@@ -98,38 +143,93 @@ function internalHref(anchor: HTMLAnchorElement | null): URL | null {
   return url.origin === window.location.origin ? url : null;
 }
 
-export default function PageTransition() {
+export default function PageTransition({ children }: { children: ReactNode }) {
   const router = useRouter();
   const pathname = usePathname();
   const reduceMotion = useReducedMotion();
 
-  const [phase, setPhase] = useState<Phase>("idle");
+  /*
+   * The intro is decided exactly once, here, and never revisited: this
+   * component lives in the root layout and so mounts once per document. That
+   * gives the two rules for free — it runs on any fresh load of the landing
+   * page, and never when you merely arrive at "/" through a link, because by
+   * then this state is long since settled.
+   *
+   * `usePathname` is accurate during SSR, so the loader is already in the
+   * server-rendered markup and there's no flash of the page underneath it.
+   */
+  const [phase, setPhase] = useState<Phase>(() =>
+    pathname === ROUTES.home ? "intro" : "idle",
+  );
+  const [introDone, setIntroDone] = useState(() => pathname !== ROUTES.home);
 
   /** Full href handed to the router, e.g. "/blog?tag=x#top". */
   const targetHref = useRef<string | null>(null);
   /** Pathname only — what `usePathname()` will report once the route lands. */
   const targetPath = useRef<string | null>(null);
   const targetHasHash = useRef(false);
-  /** Read inside the listeners so they can stay registered once. */
+  /** Read inside the listener so it can stay registered once. */
   const phaseRef = useRef<Phase>("idle");
-  const prefetched = useRef(new Set<string>());
+  /** path -> the in-flight (or settled) warm for it, so callers can await it. */
+  const warmed = useRef(new Map<string, Promise<void>>());
 
   useEffect(() => {
     phaseRef.current = phase;
   }, [phase]);
 
-  /**
-   * Warm a route's payload into the client cache. The stairs can only lift once
-   * the next page is actually mounted behind them, so anything not fetched by
-   * then is dead time the user spends staring at a black screen. Prefetching is
-   * what removes that wait — it is the whole performance story here.
+  /*
+   * Hand the landing page its animations the moment the stairs start lifting,
+   * not once they're gone — the hero is then animating in as it's uncovered,
+   * rather than sitting there finished. Idempotent, and already true by the
+   * time any ordinary navigation reaches `revealing`.
    */
-  const prefetch = useCallback(
-    (path: string) => {
-      if (path === window.location.pathname) return;
-      if (prefetched.current.has(path)) return;
-      prefetched.current.add(path);
-      router.prefetch(path);
+  useEffect(() => {
+    if (phase === "revealing") setIntroDone(true);
+  }, [phase]);
+
+  /** The loading screen is finished; sweep the stairs across and drop it. */
+  const finishIntro = useCallback(() => setPhase("covering"), []);
+
+  /**
+   * Pull a route's payload into cache so the swap behind the black has nothing
+   * left to wait for.
+   *
+   * `router.prefetch` is a no-op in development — Next bails out of it in
+   * `createPrefetchURL` to keep compile times down — which leaves the dev swap
+   * to compile the route from scratch, and a cold page here takes seconds. So
+   * in dev we request the route ourselves and throw the reply away: we don't
+   * want the bytes, we want the server to have compiled the page before the
+   * stairs ever start.
+   *
+   * Repeat calls get the same promise back rather than a second request, which
+   * is what lets a click await a warm the idle sweep already has in flight.
+   */
+  const warm = useCallback(
+    (path: string): Promise<void> => {
+      if (path === window.location.pathname) return Promise.resolve();
+
+      const inFlight = warmed.current.get(path);
+      if (inFlight) return inFlight;
+
+      const job = (async () => {
+        if (!DEV) {
+          // Fire-and-forget: prefetch reports nothing back, but it lands long
+          // before any click and `push` then reads it straight from cache.
+          router.prefetch(path);
+          return;
+        }
+        try {
+          const response = await fetch(path, { credentials: "same-origin" });
+          await response.body?.cancel();
+        } catch {
+          // Best-effort: a miss only costs a slower swap, so let the next
+          // attempt re-warm it rather than caching the failure.
+          warmed.current.delete(path);
+        }
+      })();
+
+      warmed.current.set(path, job);
+      return job;
     },
     [router],
   );
@@ -137,27 +237,36 @@ export default function PageTransition() {
   /* Every page is static and small, so pull them all in once the page is idle
      rather than waiting for a hover that may never come (touch, keyboard). */
   useEffect(() => {
-    if (reduceMotion) return;
-    const warm = () => Object.values(ROUTES).forEach(prefetch);
+    let cancelled = false;
+
+    const warmAll = async () => {
+      for (const path of Object.values(ROUTES)) {
+        if (cancelled) return;
+        // Sequential: in dev each of these compiles a route, and firing all
+        // twelve at once starves the same server we're about to navigate
+        // against. In production `prefetch` returns immediately and the loop
+        // costs nothing.
+        await warm(path);
+      }
+    };
 
     const idle = window.requestIdleCallback;
     if (typeof idle === "function") {
-      const handle = idle(warm, { timeout: 2000 });
-      return () => window.cancelIdleCallback?.(handle);
+      const handle = idle(() => void warmAll(), { timeout: 2000 });
+      return () => {
+        cancelled = true;
+        window.cancelIdleCallback?.(handle);
+      };
     }
-    const handle = window.setTimeout(warm, 1200);
-    return () => window.clearTimeout(handle);
-  }, [prefetch, reduceMotion]);
+    const handle = window.setTimeout(() => void warmAll(), 1200);
+    return () => {
+      cancelled = true;
+      window.clearTimeout(handle);
+    };
+  }, [warm]);
 
   /* Intercept internal link clicks and route them through the animation. */
   useEffect(() => {
-    function onPointerOver(event: PointerEvent) {
-      const node = event.target;
-      if (!(node instanceof Element)) return;
-      const url = internalHref(node.closest("a"));
-      if (url) prefetch(url.pathname);
-    }
-
     function onClick(event: MouseEvent) {
       const url = internalTarget(event);
       if (!url) return;
@@ -181,32 +290,56 @@ export default function PageTransition() {
         return;
       }
 
-      // Covers the case where hover never fired (touch, keyboard, fast click).
-      prefetch(url.pathname);
-
       targetHref.current = href;
       targetPath.current = url.pathname;
       targetHasHash.current = Boolean(url.hash);
-      setPhase("covering");
+      setPhase("loading");
     }
 
     document.addEventListener("click", onClick);
-    document.addEventListener("pointerover", onPointerOver);
-    return () => {
-      document.removeEventListener("click", onClick);
-      document.removeEventListener("pointerover", onPointerOver);
+    return () => document.removeEventListener("click", onClick);
+  }, [router, reduceMotion]);
+
+  /* Hold the click until its route is in hand, so the stairs run start to
+     finish without parking on black half way through. Normally the idle sweep
+     gets there first and this resolves in a single tick. */
+  useEffect(() => {
+    if (phase !== "loading") return;
+
+    const path = targetPath.current;
+    if (path === null) {
+      setPhase("covering");
+      return;
+    }
+
+    let settled = false;
+    const start = () => {
+      if (settled) return;
+      settled = true;
+      setPhase("covering");
     };
-  }, [router, reduceMotion, prefetch]);
+
+    void warm(path).then(start);
+    const cap = window.setTimeout(start, READY_CAP_MS);
+    return () => {
+      settled = true;
+      window.clearTimeout(cap);
+    };
+  }, [phase, warm]);
 
   /* Screen is black: lift the stairs the moment the new route is on screen. */
   useEffect(() => {
     if (phase !== "covered") return;
 
-    const landed = targetPath.current === null || pathname === targetPath.current;
-
-    if (!landed) {
-      const bail = setTimeout(() => setPhase("revealing"), NAV_TIMEOUT_MS);
-      return () => clearTimeout(bail);
+    if (targetPath.current !== null && pathname !== targetPath.current) {
+      // Still in flight. Revealing now would lift the stairs back onto the page
+      // the user just left, so hold the black and wait. If it never lands, fall
+      // back to a full page load — slow and ugly, but it puts the user on the
+      // page they asked for, which pretending the navigation happened does not.
+      const bail = window.setTimeout(() => {
+        if (targetHref.current) window.location.href = targetHref.current;
+      }, NAV_BAIL_MS);
+      return () => window.clearTimeout(bail);
     }
 
     // globals.css sets `scroll-behavior: smooth` on <html>, which would make
@@ -244,58 +377,77 @@ export default function PageTransition() {
     }
   }
 
-  if (reduceMotion) return null;
+  // No stairs and no loading screen — just the page, animating normally.
+  if (reduceMotion) {
+    return (
+      <IntroReadyContext.Provider value={true}>
+        {children}
+      </IntroReadyContext.Provider>
+    );
+  }
 
   return (
-    <motion.div
-      aria-hidden
-      variants={container}
-      initial="idle"
-      animate={phase}
-      className="fixed inset-0 z-9999 overflow-hidden"
-      // Opaque columns should also swallow clicks aimed at the covered page.
-      style={{ pointerEvents: phase === "idle" ? "none" : "auto" }}
-    >
-      {Array.from({ length: COLUMNS }).map((_, index) => (
-        <motion.div
-          key={index}
-          variants={column}
-          // Columns stagger in DOM order, so the last one always settles last —
-          // in both directions. Driving the phase machine off it is exact.
-          onAnimationComplete={
-            index === COLUMNS - 1 ? onColumnComplete : undefined
-          }
-          className="absolute top-0 bottom-0"
-          style={{
-            left: `calc(${index} * 100% / ${COLUMNS})`,
-            // Percentage widths land on fractional pixels and would leave
-            // hairline gaps mid-sweep. Each column overlaps the next by 1px so
-            // the seam is covered by its own colour — a black outline here
-            // would read as a border line between every stair.
-            width: `calc(100% / ${COLUMNS} + 1px)`,
-            // Black at the top so a fully-dropped stair still reads as a black
-            // page, warming into the brand tint at the leading edge.
-            background:
-              "linear-gradient(to top, #241b3e 0%, #0d0a17 45%, #000000 100%)",
-            willChange: "transform",
-          }}
-        >
-          {/*
-            The page background is already pure black, so a black stair would be
-            invisible over empty regions — only detectable where it happens to
-            cover text. This glow is what makes the staircase legible. It sits on
-            the bottom of each column, which is the leading edge both on the way
-            down and on the way back up, and it terminates abruptly at that edge
-            — which is what defines the step, without drawing a literal line.
-          */}
-          <div
-            className="pointer-events-none absolute inset-x-0 bottom-0 h-72"
+    <IntroReadyContext.Provider value={introDone}>
+      {children}
+      {phase === "intro" && <IntroLoader onDone={finishIntro} />}
+      <motion.div
+        aria-hidden
+        variants={container}
+        initial="idle"
+        animate={phase}
+        className="fixed inset-0 z-9999 overflow-hidden"
+        // Opaque columns should also swallow clicks aimed at the covered page.
+        // Nothing is covered until the stairs are actually on screen, so stay
+        // out of the way before that — the loading screen does its own blocking.
+        style={{ pointerEvents: RESTING.has(phase) ? "none" : "auto" }}
+      >
+        {Array.from({ length: COLUMNS }).map((_, index) => (
+          <motion.div
+            key={index}
+            variants={column}
+            // Columns stagger in DOM order, so the last one always settles last
+            // — in both directions. Driving the phase machine off it is exact.
+            onAnimationComplete={
+              index === COLUMNS - 1 ? onColumnComplete : undefined
+            }
+            className="absolute top-0 bottom-0"
             style={{
-              background: `linear-gradient(to top, ${edgeColor(index, 0.5)}, ${edgeColor(index, 0.14)} 42%, transparent 100%)`,
+              left: `calc(${index} * 100% / ${COLUMNS})`,
+              // Percentage widths land on fractional pixels and would leave
+              // hairline gaps mid-sweep. Each column overlaps the next by 1px so
+              // the seam is covered by its own colour — a black outline here
+              // would read as a border line between every stair.
+              width: `calc(100% / ${COLUMNS} + 1px)`,
+              // Black at the top so a fully-dropped stair still reads as a black
+              // page, warming into the brand tint at the leading edge.
+              background:
+                "linear-gradient(to top, #241b3e 0%, #0d0a17 45%, #000000 100%)",
+              // Raised on `loading`, so the layers are promoted during the wait
+              // and the drop itself never pays for it — but never at rest, where
+              // it would pin six full-screen compositor layers behind every page
+              // on the site for nothing.
+              willChange:
+                phase === "idle" || phase === "intro" ? "auto" : "transform",
             }}
-          />
-        </motion.div>
-      ))}
-    </motion.div>
+          >
+            {/*
+              The page background is already pure black, so a black stair would
+              be invisible over empty regions — only detectable where it happens
+              to cover text. This glow is what makes the staircase legible. It
+              sits on the bottom of each column, which is the leading edge both
+              on the way down and on the way back up, and it terminates abruptly
+              at that edge — which is what defines the step, without drawing a
+              literal line.
+            */}
+            <div
+              className="pointer-events-none absolute inset-x-0 bottom-0 h-72"
+              style={{
+                background: `linear-gradient(to top, ${edgeColor(index, 0.5)}, ${edgeColor(index, 0.14)} 42%, transparent 100%)`,
+              }}
+            />
+          </motion.div>
+        ))}
+      </motion.div>
+    </IntroReadyContext.Provider>
   );
 }
