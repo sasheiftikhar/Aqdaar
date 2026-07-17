@@ -85,7 +85,7 @@ export default function Scale() {
   return (
     <section className="relative py-28">
       <div className="mx-auto max-w-[1300px] px-6">
-        <div className="grid items-center gap-14 lg:grid-cols-2">
+        <div className="grid grid-cols-1 items-center gap-14 lg:grid-cols-2">
           <div>
             <Reveal>
               <h2 className="display text-4xl font-bold sm:text-6xl">
@@ -107,7 +107,7 @@ export default function Scale() {
           </Reveal>
         </div>
 
-        <div className="mt-16 grid gap-10 md:grid-cols-2">
+        <div className="mt-16 grid grid-cols-1 gap-10 md:grid-cols-2">
           <Reveal>
             <div>
               <h4 className="text-xl font-semibold text-fg">

@@ -35,7 +35,7 @@ export default function FinalCta() {
 
       <div className="relative mx-auto max-w-3xl px-6 text-center">
         <Reveal>
-          <h2 className="display text-5xl font-bold sm:text-7xl">
+          <h2 className="display text-4xl font-bold sm:text-6xl lg:text-7xl">
             Ready to Grow Big?
             <br />
             Let&apos;s Talk.
@@ -47,12 +47,14 @@ export default function FinalCta() {
           </p>
         </Reveal>
         <Reveal delay={0.2}>
-          <div className="mt-10 flex items-center justify-center gap-3">
+          {/* Side by side these two need ~430px, which no phone has — so they
+              stack and go full width until there's room for a row. */}
+          <div className="mt-10 flex flex-col items-stretch justify-center gap-3 sm:flex-row sm:items-center">
             {/* real routes, not on-page anchors — this block renders on every
                 page, and #services only ever existed on the home page */}
             <a
               href={ROUTES.consultation}
-              className="bg-primary-gradient on-accent group flex items-center gap-2 rounded-xl px-7 py-3.5 font-semibold transition-transform hover:-translate-y-0.5"
+              className="bg-primary-gradient on-accent group flex items-center justify-center gap-2 rounded-xl px-7 py-3.5 font-semibold transition-transform hover:-translate-y-0.5"
             >
               Book a Consultation
               <span className="transition-transform group-hover:translate-x-1">
@@ -61,7 +63,7 @@ export default function FinalCta() {
             </a>
             <a
               href={ROUTES.services}
-              className="rounded-xl border border-border bg-surface/50 px-7 py-3.5 font-medium text-fg transition-colors hover:bg-surface-2"
+              className="rounded-xl border border-border bg-surface/50 px-7 py-3.5 text-center font-medium text-fg transition-colors hover:bg-surface-2"
             >
               Explore Our Services
             </a>

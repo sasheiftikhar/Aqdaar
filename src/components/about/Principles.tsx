@@ -51,7 +51,10 @@ export default function Principles() {
           </h2>
         </Reveal>
 
-        <div className="mt-14 grid gap-px overflow-hidden rounded-3xl border border-border bg-border md:grid-cols-2 lg:grid-cols-3">
+        {/* Six divides cleanly by 1, 2 and 3, so every cell here is filled and
+            the bg-border showing through the gaps only ever reads as hairlines
+            — never as the empty panel it would if the count didn't fit. */}
+        <div className="mt-14 grid grid-cols-1 gap-px overflow-hidden rounded-3xl border border-border bg-border md:grid-cols-2 lg:grid-cols-3">
           {PRINCIPLES.map((p) => (
             <div key={p.n} className="flex flex-col bg-bg p-8">
               <span className="font-mono text-[11px] tracking-[0.14em] text-accent">

@@ -252,7 +252,7 @@ export default function AssistantHero() {
       <div className="dot-grid pointer-events-none absolute inset-0 opacity-[0.15]" />
       <SoftGlow position="top" />
 
-      <div className="relative mx-auto grid max-w-[1200px] items-center gap-14 px-6 lg:grid-cols-[1fr_1fr] lg:gap-12">
+      <div className="relative mx-auto grid max-w-[1200px] grid-cols-1 items-center gap-14 px-6 lg:grid-cols-[1fr_1fr] lg:gap-12">
         {/* ---------- left: the pitch ---------- */}
         <div className="text-center lg:text-left">
           <motion.a
@@ -275,7 +275,7 @@ export default function AssistantHero() {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.9, delay: 0.1, ease: [0.22, 1, 0.36, 1] }}
-            className="display mt-8 text-5xl font-extrabold tracking-[-0.03em] text-fg sm:text-6xl lg:text-[4.25rem]"
+            className="display mt-8 text-4xl font-extrabold tracking-[-0.03em] text-fg sm:text-5xl lg:text-6xl xl:text-[4.25rem]"
           >
             Now anyone can
             <br />

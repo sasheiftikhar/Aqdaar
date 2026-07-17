@@ -136,7 +136,7 @@ export default function TwoColumnHow() {
           </Reveal>
         </div>
 
-        <div className="grid items-stretch gap-5 lg:grid-cols-2">
+        <div className="grid grid-cols-1 items-stretch gap-5 lg:grid-cols-2">
           <Reveal className="h-full">
             <Card
               eyebrow="Everyday execution"

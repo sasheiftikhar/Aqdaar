@@ -43,7 +43,7 @@ function MemberCard({ m }: { m: Member }) {
   return (
     <motion.div
       whileHover="hover"
-      className="group flex flex-col bg-bg p-6"
+      className="group flex h-full flex-col rounded-3xl border border-border bg-surface/30 p-6 transition-colors hover:border-accent/40"
     >
       {/*
         PORTRAIT SLOT — arch-topped. The aspect ratio reserves the space, so
@@ -121,9 +121,27 @@ export default function Team() {
         </Reveal>
 
         <Reveal delay={0.15}>
-          <div className="mt-14 grid gap-px overflow-hidden rounded-3xl border border-border bg-border sm:grid-cols-2 lg:grid-cols-4">
+          {/*
+            Flex, not a grid. Six people across four columns leaves the last row
+            short, and `justify-center` puts those two in the middle instead of
+            stranding them against the left edge.
+
+            It also settles the violet block that used to sit beside them: the
+            old grid drew its hairlines by showing a `bg-border` container
+            through 1px gaps, which meant the two cells with no card in them
+            showed that colour as a solid panel. Cards carry their own border
+            now, so there is nothing behind them to show through.
+          */}
+          <div className="mt-14 flex flex-wrap justify-center gap-5">
             {TEAM.map((m) => (
-              <MemberCard key={m.name} m={m} />
+              <div
+                key={m.name}
+                // Widths account for the gap: two per row loses half of one gap
+                // each, four per row loses three gaps across four cards.
+                className="w-full sm:w-[calc(50%-0.625rem)] lg:w-[calc(25%-0.9375rem)]"
+              >
+                <MemberCard m={m} />
+              </div>
             ))}
           </div>
         </Reveal>

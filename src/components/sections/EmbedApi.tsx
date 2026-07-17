@@ -96,7 +96,13 @@ function CodeMock() {
           </span>
         </div>
 
-        <div className="p-5 font-mono text-[12.5px] leading-relaxed">
+        {/*
+          The lines are `whitespace-pre` and run to ~65 characters, which is
+          wider than a phone. Scroll them inside their own box rather than
+          letting the panel clip them — a code sample you can't read is worse
+          than one you swipe.
+        */}
+        <div className="scrollbar-none overflow-x-auto p-5 font-mono text-[11px] leading-relaxed sm:text-[12.5px]">
         {CODE_LINES.map((line, i) => (
           <motion.div
             key={i}
@@ -133,11 +139,16 @@ function CodeMock() {
 export default function EmbedApi() {
   return (
     <section className="relative py-28">
-      <div className="mx-auto grid max-w-[1300px] items-center gap-14 px-6 lg:grid-cols-2">
+      {/* grid-cols-1 rather than bare `grid`: it compiles to minmax(0, 1fr),
+          which pins the track to the container. Left implicit, the column is an
+          `auto` track that sizes to its content — and the code below is wider
+          than a phone. */}
+      <div className="mx-auto grid max-w-[1300px] grid-cols-1 items-center gap-14 px-6 lg:grid-cols-2">
+        {/* Reveal carries the min-w-0 that stops the code sizing this column. */}
         <Reveal>
           <CodeMock />
         </Reveal>
-        <div>
+        <div className="min-w-0">
           <Reveal>
             <h2 className="display text-4xl font-bold sm:text-6xl">
               Built on a

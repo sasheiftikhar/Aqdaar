@@ -121,7 +121,7 @@ export default function FlagshipPrograms() {
               </p>
             </div>
 
-            <div className="relative mt-10 grid gap-4 md:grid-cols-3">
+            <div className="relative mt-10 grid grid-cols-1 gap-4 md:grid-cols-3">
               {PROGRAMS.map((p, i) => (
                 <Reveal key={p.slug} delay={i * 0.1} className="h-full">
                   <ProgramCard p={p} />

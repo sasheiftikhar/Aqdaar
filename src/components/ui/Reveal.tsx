@@ -26,7 +26,12 @@ export default function Reveal({
 
   return (
     <motion.div
-      className={className}
+      // `min-w-0` does nothing to a block in normal flow, but this wraps most of
+      // the wide mocks on the site and those sit in grids — where the default
+      // min-width:auto refuses to shrink below the content's min-content width.
+      // A `whitespace-pre` code block or a fixed-width panel would otherwise
+      // size its whole column to itself and drag the section off the screen.
+      className={className ? `min-w-0 ${className}` : "min-w-0"}
       initial={{ opacity: 0, y }}
       // Resolves to the initial frame until the intro hands over: `once: true`
       // means anything already on screen behind the loading screen would

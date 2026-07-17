@@ -506,7 +506,7 @@ export default function Authentication() {
         </div>
 
         {/* items-stretch (grid default) + h-full Reveals keep both panels equal */}
-        <div className="mt-14 grid items-stretch gap-4 lg:grid-cols-2">
+        <div className="mt-14 grid grid-cols-1 items-stretch gap-4 lg:grid-cols-2">
           <Reveal className="h-full">
             <AuthFlowPanel />
           </Reveal>

@@ -60,7 +60,7 @@ export default function CTA({
 
       <div className="relative mx-auto max-w-3xl px-6 text-center">
         <Reveal>
-          <h2 className="display text-5xl font-bold sm:text-7xl lg:text-8xl">
+          <h2 className="display text-4xl font-bold sm:text-6xl lg:text-8xl">
             {title}
           </h2>
         </Reveal>
@@ -68,10 +68,12 @@ export default function CTA({
           <p className="mt-6 text-lg text-muted">{subtitle}</p>
         </Reveal>
         <Reveal delay={0.2}>
-          <div className="mt-10 flex items-center justify-center gap-3">
+          {/* Side by side these overflow a phone, so they stack full width
+              until there's room for a row. */}
+          <div className="mt-10 flex flex-col items-stretch justify-center gap-3 sm:flex-row sm:items-center">
             <a
               href={primaryHref}
-              className="group flex items-center gap-2 rounded-xl bg-accent px-6 py-3 font-medium text-black transition-transform hover:-translate-y-0.5"
+              className="group flex items-center justify-center gap-2 rounded-xl bg-accent px-6 py-3 font-medium text-black transition-transform hover:-translate-y-0.5"
             >
               {primaryLabel}
               <span className="transition-transform group-hover:translate-x-1">
@@ -80,7 +82,7 @@ export default function CTA({
             </a>
             <a
               href={secondaryHref}
-              className="rounded-xl border border-border bg-surface/50 px-6 py-3 font-medium text-fg transition-colors hover:bg-surface-2"
+              className="rounded-xl border border-border bg-surface/50 px-6 py-3 text-center font-medium text-fg transition-colors hover:bg-surface-2"
             >
               {secondaryLabel}
             </a>

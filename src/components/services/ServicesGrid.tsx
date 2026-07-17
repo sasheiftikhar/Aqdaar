@@ -99,7 +99,7 @@ export default function ServicesGrid() {
         </div>
 
         {/* top row — the pipeline */}
-        <div className="mt-12 grid gap-5 lg:grid-cols-3">
+        <div className="mt-12 grid grid-cols-1 gap-5 lg:grid-cols-3">
           {DIVISIONS.map((s, i) => (
             <Reveal key={s.title} delay={i * 0.08} className="h-full">
               <a
@@ -138,7 +138,7 @@ export default function ServicesGrid() {
         </div>
 
         {/* bottom row — book these on their own */}
-        <div className="mt-5 grid gap-5 lg:grid-cols-3">
+        <div className="mt-5 grid grid-cols-1 gap-5 lg:grid-cols-3">
           {OFFERINGS.map((o, i) => (
             <Reveal key={o.title} delay={i * 0.08} className="h-full">
               <a

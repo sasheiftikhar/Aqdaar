@@ -32,7 +32,7 @@ export default function FlagshipSpotlight() {
           The one thing on this page you can still get into.
         </p>
 
-        <div className="mt-10 grid overflow-hidden rounded-3xl border border-border bg-surface/30 lg:grid-cols-[1.15fr_1fr]">
+        <div className="mt-10 grid grid-cols-1 overflow-hidden rounded-3xl border border-border bg-surface/30 lg:grid-cols-[minmax(0,1.15fr)_minmax(0,1fr)]">
           {/* the creative at its native square — no crop on the flagship */}
           <div className="p-3">
             <PostImage

@@ -24,7 +24,7 @@ export default function PastHighlights() {
           </p>
         </Reveal>
 
-        <div className="mt-10 grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+        <div className="mt-10 grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
           {PAST_POSTS.map((e) => (
             <Reveal key={e.post} delay={0.1}>
               <article className="flex h-full flex-col overflow-hidden rounded-3xl border border-border bg-surface/30">

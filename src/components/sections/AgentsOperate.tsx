@@ -182,7 +182,7 @@ export default function AgentsOperate() {
           </Reveal>
         </div>
 
-        <div className="mt-14 grid items-stretch gap-4 lg:grid-cols-2">
+        <div className="mt-14 grid grid-cols-1 items-stretch gap-4 lg:grid-cols-2">
           <Reveal className="h-full">
             <AppMock />
           </Reveal>

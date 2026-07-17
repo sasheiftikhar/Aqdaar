@@ -6,6 +6,8 @@ import PageHero from "@/components/ui/PageHero";
 import Reveal from "@/components/ui/Reveal";
 import Team from "@/components/about/Team";
 import Principles from "@/components/about/Principles";
+import PartnerMarquee from "@/components/about/PartnerMarquee";
+import WaveField from "@/components/services/WaveField";
 import { ROUTES } from "@/lib/nav";
 
 export const metadata: Metadata = {
@@ -62,6 +64,7 @@ export default function AboutPage() {
             </>
           }
           subtitle="We are a product studio in Karachi. Most teams can find an opportunity, or build a product, or take one to market. Doing all three without dropping the thread between them is the whole idea."
+          art={<WaveField className="h-full w-full" />}
         >
           <div className="flex flex-wrap items-center gap-3">
             <a
@@ -97,7 +100,7 @@ export default function AboutPage() {
               </p>
             </Reveal>
 
-            <div className="mt-14 grid gap-5 lg:grid-cols-3">
+            <div className="mt-14 grid grid-cols-1 gap-5 lg:grid-cols-3">
               {DIVISIONS.map((d, i) => (
                 <Reveal key={d.name} delay={i * 0.1} className="h-full">
                   <div className="flex h-full flex-col rounded-3xl border border-border bg-surface/50 p-8 transition-colors hover:border-accent/40">
@@ -142,19 +145,13 @@ export default function AboutPage() {
               </p>
             </Reveal>
 
-            <Reveal delay={0.15}>
-              <div className="mt-12 flex flex-wrap gap-3">
-                {PARTNERS.map((p) => (
-                  <span
-                    key={p}
-                    className="rounded-xl border border-border bg-surface/50 px-5 py-3 text-[14px] text-muted transition-colors hover:border-accent/40 hover:text-fg"
-                  >
-                    {p}
-                  </span>
-                ))}
-              </div>
-            </Reveal>
           </div>
+
+          {/* Full-bleed: the names should run off both edges rather than stop
+              inside the container and give the loop a visible beginning. */}
+          <Reveal delay={0.15} className="mt-12">
+            <PartnerMarquee items={PARTNERS} />
+          </Reveal>
         </section>
 
         {/* the line the whole place runs on */}

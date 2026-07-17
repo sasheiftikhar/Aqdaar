@@ -1,11 +1,11 @@
 import type { Metadata } from "next";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
+import FinalCta from "@/components/home/FinalCta";
 import EventsHero from "@/components/events/EventsHero";
 import EventFeed from "@/components/events/EventFeed";
 import FlagshipSpotlight from "@/components/events/FlagshipSpotlight";
 import PastHighlights from "@/components/events/PastHighlights";
-import SponsorCta from "@/components/events/SponsorCta";
 
 export const metadata: Metadata = {
   title: "Events | Aqdaar",
@@ -22,7 +22,8 @@ export default function EventsPage() {
         <EventFeed />
         <FlagshipSpotlight />
         <PastHighlights />
-        <SponsorCta />
+        {/* The same closing CTA every other page ends on. */}
+        <FinalCta />
       </main>
       <Footer />
     </>

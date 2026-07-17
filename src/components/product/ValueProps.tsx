@@ -48,7 +48,7 @@ export default function ValueProps() {
         </div>
 
         <motion.div
-          className="grid gap-5 md:grid-cols-3"
+          className="grid grid-cols-1 gap-5 md:grid-cols-3"
           initial="hidden"
           whileInView="show"
           viewport={{ once: true, margin: "-80px" }}

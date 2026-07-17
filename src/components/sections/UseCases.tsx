@@ -105,7 +105,7 @@ export default function UseCases() {
 
   return (
     <section className="relative py-28">
-      <div className="mx-auto grid max-w-[1300px] items-center gap-14 px-6 lg:grid-cols-2">
+      <div className="mx-auto grid max-w-[1300px] grid-cols-1 items-center gap-14 px-6 lg:grid-cols-2">
         <Reveal>
           <PhoneMock activeSub={CASES[active].sub} />
         </Reveal>

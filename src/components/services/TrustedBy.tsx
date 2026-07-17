@@ -27,13 +27,24 @@ export default function TrustedBy() {
         </Reveal>
 
         <Reveal delay={0.1}>
-          <div className="mt-8 grid grid-cols-2 gap-px overflow-hidden rounded-2xl border border-border bg-border sm:grid-cols-3 lg:grid-cols-5">
+          {/*
+            Flex, not the hairline grid this used to be. Five names divide into
+            neither two columns nor three, so on a phone and a tablet the grid
+            left an empty cell — and because that grid drew its hairlines by
+            showing a `bg-border` container through 1px gaps, the empty cell
+            showed that violet as a solid panel. Separate cards can't leak a
+            background they don't sit on, and `justify-center` keeps the short
+            last row centred rather than hard left.
+          */}
+          <div className="mt-8 flex flex-wrap justify-center gap-3">
             {PARTNERS.map((name) => (
               <div
                 key={name}
-                className="flex min-h-[76px] items-center justify-center bg-bg px-4 py-5 text-center"
+                // Basis accounts for the gaps: two up loses half a gap each,
+                // three up loses two gaps across three, five up four across five.
+                className="flex min-h-[72px] basis-[calc(50%-0.375rem)] items-center justify-center rounded-2xl border border-border bg-surface/30 px-4 py-4 text-center transition-colors hover:border-accent/40 sm:basis-[calc(33.333%-0.5rem)] lg:basis-[calc(20%-0.6rem)]"
               >
-                <span className="text-[12.5px] font-semibold text-muted transition-colors hover:text-fg">
+                <span className="text-[12.5px] font-semibold text-muted">
                   {name}
                 </span>
               </div>

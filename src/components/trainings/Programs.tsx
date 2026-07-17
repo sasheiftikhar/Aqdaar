@@ -127,7 +127,7 @@ function Detail({ p }: { p: Program }) {
         }}
       />
 
-      <div className="relative grid gap-px bg-border lg:grid-cols-12">
+      <div className="relative grid grid-cols-1 gap-px bg-border lg:grid-cols-12">
         {/* curriculum */}
         <div className="bg-bg/60 p-7 lg:col-span-7">
           <p className="text-[10px] font-bold uppercase tracking-[0.16em] text-faint">
@@ -359,7 +359,7 @@ export default function Programs() {
         </Reveal>
 
         {/* card grid */}
-        <div className="mt-12 grid gap-4 md:grid-cols-2 lg:grid-cols-3">
+        <div className="mt-12 grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3">
           {list.map((p, i) => (
             <Reveal key={p.slug} delay={i * 0.08} className="h-full">
               <ProgramCard

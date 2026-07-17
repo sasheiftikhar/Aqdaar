@@ -147,7 +147,7 @@ export default function TeamDirectory() {
 
         {/* cards — stagger in on scroll, lift + glow on hover */}
         <motion.div
-          className="mt-16 grid gap-5 sm:grid-cols-2 lg:grid-cols-3"
+          className="mt-16 grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-3"
           initial="hidden"
           whileInView="show"
           viewport={{ once: true, margin: "-80px" }}

@@ -80,7 +80,7 @@ export default function PhaseTimeline() {
           />
 
           <motion.div
-            className="grid gap-6 lg:grid-cols-3"
+            className="grid grid-cols-1 gap-6 lg:grid-cols-3"
             initial="hidden"
             whileInView="show"
             viewport={{ once: true, margin: "-80px" }}

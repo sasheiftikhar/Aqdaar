@@ -6,6 +6,7 @@ import ProductHero from "@/components/product/ProductHero";
 import SolutionsGrid from "@/components/product/SolutionsGrid";
 import ConsoleObserve from "@/components/product/ConsoleObserve";
 import Scale from "@/components/product/Scale";
+import { ROUTES } from "@/lib/nav";
 
 export const metadata: Metadata = {
   title: "Solutions | Aqdaar",
@@ -27,9 +28,9 @@ export default function ProductPage() {
           title="List your solution"
           subtitle="Building for Pakistan's industry, classrooms, or homes? Pitch it to Aqdaar — low friction, high visibility."
           primaryLabel="Start a Project"
-          primaryHref="#"
+          primaryHref={ROUTES.consultation}
           secondaryLabel="Notify Me"
-          secondaryHref="#"
+          secondaryHref={ROUTES.contact}
         />
       </main>
       <Footer />

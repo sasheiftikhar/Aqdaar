@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 import Reveal from "@/components/ui/Reveal";
+import { ROUTES } from "@/lib/nav";
 
 const CATEGORIES = [
   "All",
@@ -351,7 +352,7 @@ export default function SolutionsGrid() {
         </Reveal>
 
         {/* Solutions — icon-led columns */}
-        <div className="mt-16 grid gap-12 sm:grid-cols-2 lg:grid-cols-3 lg:gap-14">
+        <div className="mt-16 grid grid-cols-1 gap-12 sm:grid-cols-2 lg:grid-cols-3 lg:gap-14">
           <AnimatePresence mode="popLayout">
             {filtered.map((s, i) => {
               const tone = CATEGORY_TONE[s.category];
@@ -395,8 +396,10 @@ export default function SolutionsGrid() {
                     </p>
                   </div>
 
+                  {/* No per-solution page exists, so this opens the
+                      conversation about one rather than sitting dead. */}
                   <a
-                    href="#"
+                    href={ROUTES.contact}
                     className="mt-4 inline-flex items-center gap-1.5 text-sm font-medium text-accent"
                   >
                     Learn More

@@ -78,9 +78,11 @@ function ConsoleMock() {
         </span>
       </div>
 
-      <div className="grid grid-cols-[180px_1fr]">
+      {/* A fixed 180px rail would leave the event itself ~150px on a phone, so
+          below sm the sidebar drops and the content takes the full width. */}
+      <div className="grid grid-cols-1 sm:grid-cols-[180px_1fr]">
         {/* sidebar */}
-        <div className="border-r border-border bg-black/40 p-3">
+        <div className="hidden border-r border-border bg-black/40 p-3 sm:block">
           <p className="mb-3 text-sm font-bold tracking-tight text-fg">AQDAAR</p>
           <p className="mb-2 text-[10px] uppercase tracking-wide text-faint">
             Events
@@ -205,7 +207,9 @@ function ConsoleMock() {
 export default function Console() {
   return (
     <section id="events" className="relative py-28">
-      <div className="mx-auto grid max-w-[1300px] items-center gap-14 px-6 lg:grid-cols-2">
+      {/* grid-cols-1 compiles to minmax(0, 1fr) and pins the track to the
+          container; a bare `grid` would size the column to the mock. */}
+      <div className="mx-auto grid max-w-[1300px] grid-cols-1 items-center gap-14 px-6 lg:grid-cols-2">
         <div>
           <Reveal>
             <h2 className="display text-4xl font-bold sm:text-6xl">

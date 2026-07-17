@@ -448,7 +448,7 @@ export default function OneBoard() {
         </Reveal>
 
         {/* deliberately uneven: 33/67, then 58/42, then 67/33 */}
-        <div className="mt-14 grid gap-4 lg:grid-cols-12">
+        <div className="mt-14 grid grid-cols-1 gap-4 lg:grid-cols-12">
           <Reveal delay={0.05} className="lg:col-span-4">
             <Card
               title="Learn"

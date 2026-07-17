@@ -30,7 +30,7 @@ function Check() {
 export default function ConsultantProfile() {
   return (
     <section className="relative bg-bg py-16">
-      <div className="mx-auto grid max-w-[1200px] items-center gap-12 px-6 lg:grid-cols-[1.05fr_1fr]">
+      <div className="mx-auto grid max-w-[1200px] grid-cols-1 items-center gap-12 px-6 lg:grid-cols-[minmax(0,1.05fr)_minmax(0,1fr)]">
         {/* left — the claim and what backs it */}
         <div>
           <Reveal>
@@ -51,7 +51,7 @@ export default function ConsultantProfile() {
             </p>
           </Reveal>
 
-          <div className="mt-8 grid gap-3 sm:grid-cols-2">
+          <div className="mt-8 grid grid-cols-1 gap-3 sm:grid-cols-2">
             {LEAD.credentials.map((c, i) => (
               <Reveal key={c} delay={0.18 + i * 0.07}>
                 <div className="flex items-start gap-3">

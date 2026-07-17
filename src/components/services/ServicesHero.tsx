@@ -36,7 +36,7 @@ export default function ServicesHero() {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.9, delay: 0.1, ease: [0.22, 1, 0.36, 1] }}
-            className="display mt-5 text-5xl font-extrabold tracking-[-0.03em] text-fg sm:text-6xl"
+            className="display mt-5 text-4xl font-extrabold tracking-[-0.03em] text-fg sm:text-5xl lg:text-6xl"
           >
             Everything it takes
             <br />

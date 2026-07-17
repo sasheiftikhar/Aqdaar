@@ -26,15 +26,35 @@ const N = HERO_POSTS.length;
  *
  * The cards stay fully opaque — a translucent card would show the one behind it
  * through its own artwork and the stack would read as mud. Depth is sold by
- * offset, scale, and the scrim in SCRIM below; only the card leaving the cycle
- * fades, and it fades from behind everything else.
+ * offset, scale, and the scrim in SCRIM below.
  */
 const DEPTH = [
   { x: 0, y: 0, rotate: -2.5, scale: 1, opacity: 1 },
   { x: 34, y: -22, rotate: 3.5, scale: 0.95, opacity: 1 },
   { x: 64, y: -42, rotate: 8.5, scale: 0.9, opacity: 1 },
 ];
+
+/**
+ * The card that just lost the front — it throws off to the left and fades,
+ * rather than shrinking backwards into the stack it is supposed to be leaving.
+ * That backwards retreat is what made the cycle read as a wobble instead of a
+ * deal of cards.
+ */
+const OUT = { x: -120, y: 28, rotate: -15, scale: 0.96, opacity: 0 };
+
+/** Parked at the back of the stack, invisible, waiting its turn to step up. */
 const HIDDEN = { x: 64, y: -42, rotate: 8.5, scale: 0.9, opacity: 0 };
+
+/**
+ * `depth` counts backwards from the front, so the card at `n - 1` is the one
+ * that was in front an instant ago — that's the throw. Anything between the
+ * visible stack and that is parked out of sight.
+ */
+function poseFor(depth: number, n: number) {
+  if (depth < DEPTH.length) return DEPTH[depth];
+  if (depth === n - 1) return OUT;
+  return HIDDEN;
+}
 
 /** How hard each depth is darkened, so the back of the stack recedes. */
 const SCRIM = [0, 0.55, 0.78];
@@ -54,23 +74,14 @@ export default function EventsHero() {
       <div className="dot-grid pointer-events-none absolute inset-0 opacity-[0.15]" />
       <SoftGlow position="top" />
 
-      <div className="relative mx-auto grid max-w-[1200px] items-center gap-16 px-6 lg:grid-cols-[1fr_460px] lg:gap-10">
+      <div className="relative mx-auto grid max-w-[1200px] grid-cols-1 items-center gap-16 px-6 lg:grid-cols-[minmax(0,1fr)_460px] lg:gap-10">
         {/* left — the words */}
-        <div>
-          <motion.p
-            initial={{ opacity: 0, y: 10 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5 }}
-            className="text-[11.5px] font-bold uppercase tracking-[0.2em] text-accent"
-          >
-            Events
-          </motion.p>
-
+        <div className="min-w-0">
           <motion.h1
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.9, delay: 0.1, ease: [0.22, 1, 0.36, 1] }}
-            className="display mt-5 text-5xl font-extrabold tracking-[-0.03em] text-fg sm:text-6xl"
+            className="display text-4xl font-extrabold tracking-[-0.03em] text-fg sm:text-5xl lg:text-6xl"
           >
             What&apos;s Happening
             <br />
@@ -118,7 +129,7 @@ export default function EventsHero() {
           <div className="relative aspect-[4/5] w-full">
             {HERO_POSTS.map((post, i) => {
               const depth = (i - front + N) % N;
-              const pose = DEPTH[depth] ?? HIDDEN;
+              const pose = poseFor(depth, N);
 
               return (
                 <motion.div

@@ -48,7 +48,7 @@ function DirectInfo() {
         limited number of projects each quarter, so reach out early.
       </p>
 
-      <div className="mt-9 grid gap-3 sm:grid-cols-2">
+      <div className="mt-9 grid grid-cols-1 gap-3 sm:grid-cols-2">
         <InfoCard label="Based in">
           Karachi, Pakistan
           <br />
@@ -183,7 +183,7 @@ function ContactForm() {
       </p>
 
       <form onSubmit={onSubmit} noValidate className="mt-7 space-y-4">
-        <div className="grid gap-4 sm:grid-cols-2">
+        <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
           <label className="block">
             <span className="mb-2 block text-xs font-medium text-muted">
               Name
@@ -198,7 +198,7 @@ function ContactForm() {
           </label>
         </div>
 
-        <div className="grid gap-4 sm:grid-cols-2">
+        <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
           <label className="block">
             <span className="mb-2 block text-xs font-medium text-muted">
               Email
@@ -264,7 +264,7 @@ function ContactForm() {
 export default function ContactBody() {
   return (
     <section className="relative bg-bg py-20">
-      <div className="mx-auto grid max-w-[1200px] items-start gap-14 px-6 lg:grid-cols-2">
+      <div className="mx-auto grid max-w-[1200px] grid-cols-1 items-start gap-14 px-6 lg:grid-cols-2">
         <Reveal>
           <DirectInfo />
         </Reveal>

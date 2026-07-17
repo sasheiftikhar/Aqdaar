@@ -51,7 +51,7 @@ export default function GetInTouch() {
   return (
     <section id="contact" className="relative bg-bg py-16">
       <div className="mx-auto max-w-[1200px] px-6">
-        <div className="grid gap-12 rounded-3xl border border-border bg-surface/30 p-8 sm:p-12 lg:grid-cols-2 lg:gap-16">
+        <div className="grid grid-cols-1 gap-12 rounded-3xl border border-border bg-surface/30 p-6 sm:p-12 lg:grid-cols-2 lg:gap-16">
           {/* the pitch */}
           <Reveal>
             <div>

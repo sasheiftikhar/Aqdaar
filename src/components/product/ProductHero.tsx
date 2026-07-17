@@ -19,7 +19,7 @@ export default function ProductHero() {
         <div className="dot-grid absolute inset-0 opacity-30" />
       </div>
 
-      <div className="relative mx-auto grid w-full max-w-[1300px] items-center gap-14 px-6 lg:grid-cols-2 lg:px-10">
+      <div className="relative mx-auto grid w-full max-w-[1300px] grid-cols-1 items-center gap-14 px-6 lg:grid-cols-2 lg:px-10">
         {/* Left — content */}
         <div>
           <motion.div
@@ -32,7 +32,7 @@ export default function ProductHero() {
             Coming Soon
           </motion.div>
 
-          <h1 className="display text-balance text-5xl font-bold sm:text-6xl lg:text-7xl">
+          <h1 className="display text-balance text-4xl font-bold sm:text-5xl lg:text-6xl xl:text-7xl">
             <motion.span
               initial={{ opacity: 0, y: 18 }}
               animate={{ opacity: 1, y: 0 }}

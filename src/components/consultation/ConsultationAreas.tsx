@@ -9,14 +9,23 @@ import { AREA_ICONS } from "@/components/consultation/icons";
 /**
  * The four areas we consult on.
  *
- * The icon rail doubles as the selector — hovering or tapping a tile swaps the
- * panel below it, so the whole section is one interaction instead of four
- * cards the eye has to compare on its own.
+ * The rail advances on its own: a line fills across the live tile and hands over
+ * to the next one when it reaches the end. The line *is* the clock — the handover
+ * runs off its `onAnimationComplete` rather than a timer set alongside it, so
+ * what you see and when it turns over cannot drift apart.
+ *
+ * Tapping a tile still jumps straight to it, and restarts the fill from there.
  */
+
+/** Seconds a tile holds before the rail moves on. */
+const DWELL = 4;
+
 export default function ConsultationAreas() {
-  const [slug, setSlug] = useState(AREAS[0].slug);
-  const active = AREAS.find((a) => a.slug === slug) ?? AREAS[0];
+  const [index, setIndex] = useState(0);
+  const active = AREAS[index];
   const ActiveIcon = AREA_ICONS[active.slug];
+
+  const next = () => setIndex((i) => (i + 1) % AREAS.length);
 
   return (
     <section id="areas" className="relative scroll-mt-24 bg-bg py-16">
@@ -42,8 +51,9 @@ export default function ConsultationAreas() {
             return (
               <Reveal key={a.slug} delay={i * 0.07} className="shrink-0">
                 <motion.button
-                  onClick={() => setSlug(a.slug)}
-                  onMouseEnter={() => setSlug(a.slug)}
+                  onClick={() => setIndex(i)}
+                  // No hover-to-select: it would fight the rail for control and
+                  // leave the fill running against a tile that isn't live.
                   aria-pressed={on}
                   whileHover={{ y: -4 }}
                   transition={{ duration: 0.25, ease: [0.22, 1, 0.36, 1] }}
@@ -81,13 +91,21 @@ export default function ConsultationAreas() {
                     {a.label}
                   </span>
 
-                  {/* the underline glides to whichever tile is live */}
+                  {/*
+                    The clock. It fills across the live tile and calls the rail
+                    on when it lands — linear, because a bar that eases is a bar
+                    that lies about how long is left.
+                  */}
                   {on && (
                     <motion.span
-                      layoutId="area-underline"
-                      className="absolute inset-x-6 bottom-0 h-[2px] rounded-full"
+                      key={index}
+                      aria-hidden
+                      className="absolute inset-x-6 bottom-0 h-[2px] origin-left rounded-full"
                       style={{ background: a.tone }}
-                      transition={{ duration: 0.35, ease: [0.22, 1, 0.36, 1] }}
+                      initial={{ scaleX: 0 }}
+                      animate={{ scaleX: 1 }}
+                      transition={{ duration: DWELL, ease: "linear" }}
+                      onAnimationComplete={next}
                     />
                   )}
                 </motion.button>
@@ -115,8 +133,8 @@ export default function ConsultationAreas() {
                 }}
               />
 
-              <div className="relative grid gap-8 p-8 sm:p-10 lg:grid-cols-[1fr_1.1fr]">
-                <div>
+              <div className="relative grid grid-cols-1 gap-8 p-6 sm:p-10 lg:grid-cols-[minmax(0,1fr)_minmax(0,1.1fr)]">
+                <div className="min-w-0">
                   <span
                     className="flex h-14 w-14 items-center justify-center rounded-2xl border"
                     style={{

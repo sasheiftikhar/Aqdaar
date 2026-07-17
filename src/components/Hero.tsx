@@ -217,7 +217,11 @@ export default function Hero() {
       {/* hero top: earth + content, clipped so the earth ends at the pill */}
       <div className="relative overflow-hidden">
         <div className="dot-grid pointer-events-none absolute inset-0 opacity-[0.15]" />
-        <div className="pointer-events-none absolute left-1/2 top-[120px] aspect-square w-[76vw] max-w-[1150px] -translate-x-1/2">
+        {/* 76vw reads as a backdrop on a wide screen but shrinks to a small
+            disc on a phone, so the earth scales up as the viewport narrows —
+            wider than the screen and clipped by the parent, which keeps it
+            reading as a horizon behind the copy rather than a logo above it. */}
+        <div className="pointer-events-none absolute left-1/2 top-[140px] aspect-square w-[155vw] max-w-[1150px] -translate-x-1/2 sm:top-[130px] sm:w-[105vw] lg:top-[120px] lg:w-[76vw]">
           <HeroGraphic />
         </div>
 

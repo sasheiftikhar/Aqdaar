@@ -210,7 +210,7 @@ export default function TrainingHero() {
       <div className="dot-grid pointer-events-none absolute inset-0 opacity-[0.15]" />
       <SoftGlow position="top" />
 
-      <div className="relative mx-auto grid max-w-[1200px] items-center gap-14 px-6 lg:grid-cols-12">
+      <div className="relative mx-auto grid max-w-[1200px] grid-cols-1 items-center gap-14 px-6 lg:grid-cols-12">
         {/* copy rail */}
         <div className="lg:col-span-5">
           <motion.p
@@ -226,7 +226,7 @@ export default function TrainingHero() {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.9, delay: 0.1, ease: [0.22, 1, 0.36, 1] }}
-            className="display mt-5 text-5xl font-extrabold tracking-[-0.03em] text-fg sm:text-6xl"
+            className="display mt-5 text-4xl font-extrabold tracking-[-0.03em] text-fg sm:text-5xl lg:text-6xl"
           >
             Upskill with <span className="text-gradient">Aqdaar.</span>
           </motion.h1>

@@ -47,7 +47,9 @@ function FeaturedCard({ post }: { post: Post }) {
   return (
     <motion.a
       href={`/blog/${post.slug}`}
-      className="group grid gap-px overflow-hidden rounded-3xl border border-border bg-border lg:grid-cols-2"
+      // Exactly two children, so every cell is always filled and the bed can
+      // only ever read as the hairline between them.
+      className="group grid grid-cols-1 gap-px overflow-hidden rounded-3xl border border-border bg-border lg:grid-cols-2"
       whileHover="hover"
     >
       {/*
@@ -103,10 +105,10 @@ function PostCard({ post }: { post: Post }) {
       animate={{ opacity: 1, y: 0 }}
       exit={{ opacity: 0, y: -8 }}
       transition={{ duration: 0.35, ease: [0.22, 1, 0.36, 1] }}
-      className="group flex flex-col bg-bg p-8 transition-colors hover:bg-surface/40"
+      className="group flex h-full flex-col rounded-3xl border border-border bg-surface/20 p-6 transition-colors hover:border-accent/40 hover:bg-surface/40 sm:p-8"
     >
       <Meta post={post} />
-      <h3 className="mt-3.5 text-[22px] font-bold leading-tight text-fg transition-colors group-hover:text-accent">
+      <h3 className="mt-3.5 text-[20px] font-bold leading-tight text-fg transition-colors group-hover:text-accent sm:text-[22px]">
         {post.title}
       </h3>
       <p className="mt-3 flex-1 text-[13.5px] leading-relaxed text-muted">
@@ -185,12 +187,19 @@ export default function BlogIndex({ posts }: { posts: Post[] }) {
         </Reveal>
       )}
 
-      {/* the rest, as a hairline grid — gap-px over a border-toned bed */}
+      {/*
+        Gapped cards, not the hairline bed this used to be. That bed drew its
+        lines by showing a `bg-border` container through 1px gaps — which only
+        works when the cards fill every cell. `rest` is whatever the active
+        filter leaves behind, so its length is arbitrary: any count that doesn't
+        divide by two or three left cells uncovered, and the violet showed
+        through as a solid block that appeared and vanished as you switched tabs.
+      */}
       {rest.length > 0 && (
         <Reveal delay={0.1}>
           <motion.div
             layout
-            className="mt-6 grid gap-px overflow-hidden rounded-3xl border border-border bg-border sm:grid-cols-2 lg:grid-cols-3"
+            className="mt-6 grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-3"
           >
             <AnimatePresence mode="popLayout" initial={false}>
               {rest.map((p) => (

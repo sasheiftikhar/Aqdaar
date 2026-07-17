@@ -8,11 +8,17 @@ import { CONSULT_HREF } from "@/lib/nav";
 /**
  * How an engagement runs — device mock on the left, accordion on the right.
  *
- * The open step drives the mock, so the two halves are never out of sync: pick a
- * step and the screen beside it redraws to that step's artefact. One step is
- * always open; clicking the open one does nothing rather than collapsing to an
- * empty panel.
+ * It walks itself: a line runs down the open step and hands over to the next one
+ * when it reaches the bottom. The line *is* the clock — the handover fires from
+ * its `onAnimationComplete` rather than a timer running beside it, so the bar
+ * and the step it belongs to cannot drift apart.
+ *
+ * The open step drives the mock, so the two halves are never out of sync.
+ * Clicking a step jumps to it and restarts the run from there.
  */
+
+/** Seconds a step holds before it hands over. */
+const DWELL = 4;
 
 const STEPS = [
   {
@@ -56,6 +62,8 @@ export default function ServicesHow() {
   const [open, setOpen] = useState(0);
   const step = STEPS[open];
 
+  const next = () => setOpen((i) => (i + 1) % STEPS.length);
+
   return (
     <section id="how" className="relative bg-bg py-16">
       <div className="mx-auto max-w-[1200px] px-6">
@@ -69,7 +77,7 @@ export default function ServicesHow() {
           </h2>
         </Reveal>
 
-        <div className="mt-12 grid items-center gap-12 lg:grid-cols-[minmax(0,1fr)_minmax(0,1.05fr)]">
+        <div className="mt-12 grid grid-cols-1 items-center gap-12 lg:grid-cols-[minmax(0,1fr)_minmax(0,1.05fr)]">
           {/* the mock */}
           <Reveal>
             <div className="relative mx-auto w-full max-w-[380px]">
@@ -142,12 +150,29 @@ export default function ServicesHow() {
                 return (
                   <div
                     key={s.key}
-                    className={`overflow-hidden rounded-2xl border transition-colors ${
+                    className={`relative overflow-hidden rounded-2xl border transition-colors ${
                       isOpen
                         ? "border-accent/40 bg-surface/60"
                         : "border-border bg-surface/25"
                     }`}
                   >
+                    {/*
+                      The clock. It runs down the open step and calls the next
+                      one when it lands — linear, because a bar that eases is a
+                      bar that lies about how long is left.
+                    */}
+                    {isOpen && (
+                      <motion.span
+                        key={open}
+                        aria-hidden
+                        className="bg-primary-gradient absolute inset-y-0 left-0 w-[2px] origin-top"
+                        initial={{ scaleY: 0 }}
+                        animate={{ scaleY: 1 }}
+                        transition={{ duration: DWELL, ease: "linear" }}
+                        onAnimationComplete={next}
+                      />
+                    )}
+
                     <button
                       type="button"
                       onClick={() => setOpen(i)}

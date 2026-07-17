@@ -88,7 +88,7 @@ export default function EventFeed() {
             or write to us and we&apos;ll tell you what&apos;s next.
           </p>
         ) : (
-          <div className="mt-10 grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+          <div className="mt-10 grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
             {shown.map((e) => (
               <FeedCard key={e.post} event={e} />
             ))}

@@ -1,14 +1,16 @@
 "use client";
 
 import { motion } from "framer-motion";
+import SoftGlow from "@/components/ui/SoftGlow";
 import { LEAD } from "@/components/consultation/consultation-data";
 
 /**
- * The banner opener — headline, discovery-call CTA, and an orbiting-rings
- * visual on the right.
+ * The opener — headline, discovery-call CTA, and an orbiting-rings visual on
+ * the right.
  *
- * It's a bordered banner card rather than the standard PageHero because this
- * page leads with a single action and needs the room to show it.
+ * Laid out straight onto the page like every other hero on the site. It used to
+ * sit inside a bordered card, which made this the only page that opened with a
+ * box around its headline.
  */
 
 const RINGS = [
@@ -89,25 +91,20 @@ function OrbitVisual() {
 
 export default function ConsultationHero() {
   return (
-    <section className="relative overflow-hidden bg-bg pt-32 pb-14">
-      <div className="mx-auto max-w-[1200px] px-6">
-        <motion.div
-          initial={{ opacity: 0, y: 18 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.8, ease: [0.22, 1, 0.36, 1] }}
-          className="relative overflow-hidden rounded-[28px] border border-border bg-surface/40"
-        >
-          <div className="dot-grid pointer-events-none absolute inset-0 opacity-[0.18]" />
-          {/* the wash breathes rather than sitting flat */}
-          <motion.div
-            aria-hidden
-            className="bg-soft-gradient pointer-events-none absolute -right-24 -top-32 h-[420px] w-[620px] rounded-full blur-[130px]"
-            animate={{ opacity: [0.08, 0.16, 0.08] }}
-            transition={{ duration: 8, repeat: Infinity, ease: "easeInOut" }}
-          />
+    <section className="relative overflow-hidden bg-bg pt-28 pb-14 sm:pt-36">
+      <div className="dot-grid pointer-events-none absolute inset-0 opacity-[0.15]" />
+      <SoftGlow position="top" />
+      {/* the wash breathes rather than sitting flat */}
+      <motion.div
+        aria-hidden
+        className="bg-soft-gradient pointer-events-none absolute -right-24 -top-32 h-[420px] w-[620px] rounded-full blur-[130px]"
+        animate={{ opacity: [0.08, 0.16, 0.08] }}
+        transition={{ duration: 8, repeat: Infinity, ease: "easeInOut" }}
+      />
 
-          <div className="relative grid items-center gap-8 p-8 sm:p-12 lg:grid-cols-[1.25fr_1fr] lg:p-14">
-            <div>
+      <div className="relative mx-auto max-w-[1200px] px-6">
+        <div className="grid grid-cols-1 items-center gap-8 lg:grid-cols-[minmax(0,1.25fr)_minmax(0,1fr)]">
+          <div className="min-w-0">
               <motion.h1
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
@@ -116,7 +113,7 @@ export default function ConsultationHero() {
                   delay: 0.25,
                   ease: [0.22, 1, 0.36, 1],
                 }}
-                className="display text-4xl font-extrabold tracking-[-0.03em] text-fg sm:text-6xl"
+                className="display text-4xl font-extrabold tracking-[-0.03em] text-fg sm:text-5xl lg:text-6xl"
               >
                 Strategic Guidance
                 <br />
@@ -156,23 +153,22 @@ export default function ConsultationHero() {
               </motion.div>
             </div>
 
-            {/* orbit visual — floats gently so the banner never sits still */}
+          {/* orbit visual — floats gently so the hero never sits still */}
+          <motion.div
+            initial={{ opacity: 0, scale: 0.9 }}
+            animate={{ opacity: 1, scale: 1 }}
+            transition={{ duration: 1, delay: 0.4, ease: [0.22, 1, 0.36, 1] }}
+            className="hidden lg:block"
+          >
             <motion.div
-              initial={{ opacity: 0, scale: 0.9 }}
-              animate={{ opacity: 1, scale: 1 }}
-              transition={{ duration: 1, delay: 0.4, ease: [0.22, 1, 0.36, 1] }}
-              className="hidden lg:block"
+              className="h-[280px]"
+              animate={{ y: [0, -10, 0] }}
+              transition={{ duration: 7, repeat: Infinity, ease: "easeInOut" }}
             >
-              <motion.div
-                className="h-[280px]"
-                animate={{ y: [0, -10, 0] }}
-                transition={{ duration: 7, repeat: Infinity, ease: "easeInOut" }}
-              >
-                <OrbitVisual />
-              </motion.div>
+              <OrbitVisual />
             </motion.div>
-          </div>
-        </motion.div>
+          </motion.div>
+        </div>
       </div>
     </section>
   );
