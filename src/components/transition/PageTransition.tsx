@@ -32,18 +32,15 @@ import { usePathname, useRouter } from "next/navigation";
 import { motion, useReducedMotion, type Variants } from "framer-motion";
 import IntroLoader from "@/components/intro/IntroLoader";
 import { IntroReadyContext } from "@/components/intro/ready";
+import {
+  StairColumns,
+  stairContainer,
+  useStairCount,
+} from "@/components/transition/stairs";
 import { ROUTES } from "@/lib/nav";
 
 const DEV = process.env.NODE_ENV === "development";
 
-/** More columns = finer staircase, but a longer total sweep. Six reads well. */
-const COLUMNS = 6;
-/** How long one column takes to travel a full screen height. */
-const DURATION = 0.36;
-/** Offset between adjacent columns — this is what makes it a staircase. */
-const STAGGER = 0.035;
-/** easeInOutQuart — no hard start/stop at either end of the travel. */
-const EASE = [0.76, 0, 0.24, 1] as const;
 /**
  * Last resort if a route never lands. Generous in development, where routes
  * compile on first request and a cold page legitimately takes seconds; in
@@ -56,22 +53,6 @@ const NAV_BAIL_MS = DEV ? 15000 : 4000;
  * swallow the click for good, and a warm route clears it in a single tick.
  */
 const READY_CAP_MS = DEV ? 8000 : 2500;
-
-/** Brand gradient endpoints — lavender to mint, matching .bg-primary-gradient. */
-const LAVENDER = [202, 191, 225] as const;
-const MINT = [180, 217, 206] as const;
-
-/**
- * Each column's leading edge takes one step along the brand gradient, so the
- * six edges together read as a single lavender-to-mint sweep across the screen.
- */
-function edgeColor(index: number, alpha: number) {
-  const t = index / (COLUMNS - 1);
-  const [r, g, b] = LAVENDER.map((from, i) =>
-    Math.round(from + (MINT[i] - from) * t),
-  );
-  return `rgba(${r}, ${g}, ${b}, ${alpha})`;
-}
 
 /**
  * `intro` is the loading screen holding the landing page on first open, and
@@ -90,28 +71,12 @@ type Phase =
 /** Phases where the stairs are parked off screen and cover nothing. */
 const RESTING = new Set<Phase>(["intro", "idle", "loading"]);
 
-const container: Variants = {
-  intro: {},
-  idle: {},
-  loading: {},
-  covering: { transition: { staggerChildren: STAGGER } },
-  covered: {},
-  revealing: { transition: { staggerChildren: STAGGER } },
-};
-
 /**
- * Every phase before the drop shares `revealing`'s resting position, so arming
- * a transition and resetting after one are both no-ops rather than a visible
- * snap.
+ * The stairs only know `resting`/`covering`/`covered`/`revealing`, so the three
+ * phases that differ only in what *this* component is waiting for all collapse
+ * onto the same parked position.
  */
-const column: Variants = {
-  intro: { y: "-100%" },
-  idle: { y: "-100%" },
-  loading: { y: "-100%" },
-  covering: { y: "0%", transition: { duration: DURATION, ease: EASE } },
-  covered: { y: "0%" },
-  revealing: { y: "-100%", transition: { duration: DURATION, ease: EASE } },
-};
+const stairPhase = (phase: Phase) => (RESTING.has(phase) ? "resting" : phase);
 
 /** Same-origin, same-tab, plain-left-click link — or null if we shouldn't touch it. */
 function internalTarget(event: MouseEvent): URL | null {
@@ -147,6 +112,7 @@ export default function PageTransition({ children }: { children: ReactNode }) {
   const router = useRouter();
   const pathname = usePathname();
   const reduceMotion = useReducedMotion();
+  const stairCount = useStairCount();
 
   /*
    * The intro is decided exactly once, here, and never revisited: this
@@ -389,64 +355,34 @@ export default function PageTransition({ children }: { children: ReactNode }) {
   return (
     <IntroReadyContext.Provider value={introDone}>
       {children}
-      {phase === "intro" && <IntroLoader onDone={finishIntro} />}
+      {/*
+        Held through `covering` as well, not just `intro`. Dropping it the
+        moment the bar hits 100% would reveal the landing page, and only then
+        sweep the stairs over it and lift them off it again — the page arriving
+        twice, once by accident. It stays until `covered` hides it, so the
+        stairs are what takes it away.
+      */}
+      {!introDone && (phase === "intro" || phase === "covering") && (
+        <IntroLoader onDone={finishIntro} />
+      )}
       <motion.div
         aria-hidden
-        variants={container}
-        initial="idle"
-        animate={phase}
+        variants={stairContainer}
+        initial="resting"
+        animate={stairPhase(phase)}
         className="fixed inset-0 z-9999 overflow-hidden"
         // Opaque columns should also swallow clicks aimed at the covered page.
         // Nothing is covered until the stairs are actually on screen, so stay
         // out of the way before that — the loading screen does its own blocking.
         style={{ pointerEvents: RESTING.has(phase) ? "none" : "auto" }}
       >
-        {Array.from({ length: COLUMNS }).map((_, index) => (
-          <motion.div
-            key={index}
-            variants={column}
-            // Columns stagger in DOM order, so the last one always settles last
-            // — in both directions. Driving the phase machine off it is exact.
-            onAnimationComplete={
-              index === COLUMNS - 1 ? onColumnComplete : undefined
-            }
-            className="absolute top-0 bottom-0"
-            style={{
-              left: `calc(${index} * 100% / ${COLUMNS})`,
-              // Percentage widths land on fractional pixels and would leave
-              // hairline gaps mid-sweep. Each column overlaps the next by 1px so
-              // the seam is covered by its own colour — a black outline here
-              // would read as a border line between every stair.
-              width: `calc(100% / ${COLUMNS} + 1px)`,
-              // Black at the top so a fully-dropped stair still reads as a black
-              // page, warming into the brand tint at the leading edge.
-              background:
-                "linear-gradient(to top, #241b3e 0%, #0d0a17 45%, #000000 100%)",
-              // Raised on `loading`, so the layers are promoted during the wait
-              // and the drop itself never pays for it — but never at rest, where
-              // it would pin six full-screen compositor layers behind every page
-              // on the site for nothing.
-              willChange:
-                phase === "idle" || phase === "intro" ? "auto" : "transform",
-            }}
-          >
-            {/*
-              The page background is already pure black, so a black stair would
-              be invisible over empty regions — only detectable where it happens
-              to cover text. This glow is what makes the staircase legible. It
-              sits on the bottom of each column, which is the leading edge both
-              on the way down and on the way back up, and it terminates abruptly
-              at that edge — which is what defines the step, without drawing a
-              literal line.
-            */}
-            <div
-              className="pointer-events-none absolute inset-x-0 bottom-0 h-72"
-              style={{
-                background: `linear-gradient(to top, ${edgeColor(index, 0.5)}, ${edgeColor(index, 0.14)} 42%, transparent 100%)`,
-              }}
-            />
-          </motion.div>
-        ))}
+        <StairColumns
+          count={stairCount}
+          onColumnComplete={onColumnComplete}
+          // `loading` counts: promoting the layers during the wait means the
+          // drop that follows never pays for it.
+          active={phase !== "idle" && phase !== "intro"}
+        />
       </motion.div>
     </IntroReadyContext.Provider>
   );

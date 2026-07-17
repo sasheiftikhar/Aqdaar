@@ -110,7 +110,7 @@ export default function IntroLoader({ onDone }: { onDone: () => void }) {
 
   return (
     <div
-      className="fixed inset-0 flex flex-col items-center justify-center gap-12 overflow-hidden bg-bg px-6 sm:gap-14"
+      className="fixed inset-0 flex flex-col items-center justify-center gap-12 overflow-hidden bg-bg px-6 xl:gap-14"
       style={{ zIndex: Z_INDEX }}
     >
       <div className="dot-grid pointer-events-none absolute inset-0 opacity-[0.15]" />
@@ -161,9 +161,12 @@ export default function IntroLoader({ onDone }: { onDone: () => void }) {
           between the line and the ring. Keep `mt-*` in step with the column's
           `gap-*` or that stops being true.
 
-          Six labels also only fit side by side once there's room for them.
+          Six of these need roughly 150px each and the end two overhang the rail
+          by half their width, so they only fit once the viewport is past ~1050px
+          — hence `xl` and not `sm`. Narrower than that and they'd collide with
+          each other and clip off the sides; the single active label covers it.
         */}
-        <div className="relative mt-12 hidden h-3 sm:mt-14 sm:block">
+        <div className="relative mt-12 hidden h-3 xl:mt-14 xl:block">
           {STAGES.map((label, index) => (
             <span
               key={label}
@@ -177,8 +180,8 @@ export default function IntroLoader({ onDone }: { onDone: () => void }) {
           ))}
         </div>
 
-        {/* Narrow screens get the current stage only, centred. */}
-        <p className="mt-12 text-center text-[9px] font-bold uppercase leading-none tracking-[0.16em] text-fg sm:hidden">
+        {/* Anything narrower gets the current stage only, centred. */}
+        <p className="mt-12 text-center text-[10px] font-bold uppercase leading-none tracking-[0.16em] text-fg xl:hidden">
           {STAGES[active]}
         </p>
       </div>
