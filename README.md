@@ -124,7 +124,5 @@ Pushes to `main` redeploy automatically.
   content detection does not always pick up a brand-new directory while the dev
   server is running, so its classes silently never generate. New files inside an
   existing folder are fine.
-- **`extensor-next/` is local reference material**, gitignored and not part of
-  the build or the deploy.
 - `next build` rewrites the `include` array in `tsconfig.json` to add its
   `distDir` types. Harmless, but it shows up as a diff.
