@@ -260,7 +260,7 @@ export default function Hero() {
             transition={{ duration: 0.6, delay: 0.35 }}
             className="mx-auto mt-6 max-w-xl text-lg font-medium text-fg/90"
           >
-            Aapke Idea Se Market Tak — Ek Chhat Ke Neeche.
+            Creating what History Can&apos;t ignore.
           </motion.p>
 
           <motion.p
