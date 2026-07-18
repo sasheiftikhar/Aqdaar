@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import Reveal from "@/components/ui/Reveal";
+import Honeypot from "@/components/ui/Honeypot";
 
 /**
  * The closing form — pitch on the left, fields on the right.
@@ -36,6 +37,7 @@ export default function GetInTouch() {
           company: data.get("company"),
           subject: "Services enquiry",
           message: data.get("message"),
+          website: data.get("website"), // honeypot — humans leave blank
         }),
       });
 
@@ -118,6 +120,7 @@ export default function GetInTouch() {
                 </div>
               ) : (
                 <form onSubmit={onSubmit} className="mt-8 space-y-5">
+                  <Honeypot />
                   <Field
                     label="Your name"
                     name="name"

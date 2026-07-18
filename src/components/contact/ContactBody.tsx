@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import Reveal from "@/components/ui/Reveal";
+import Honeypot from "@/components/ui/Honeypot";
 
 const INTERESTS = [
   "Trainings",
@@ -122,6 +123,7 @@ function ContactForm() {
     const phone = String(fd.get("phone") || "").trim();
     const interest = String(fd.get("interest") || "").trim();
     const message = String(fd.get("message") || "").trim();
+    const website = String(fd.get("website") || ""); // honeypot — humans leave blank
 
     if (!name || !email || !message) {
       setStatus({
@@ -149,6 +151,7 @@ function ContactForm() {
           // the email API reads `subject` — carry the interest through it
           subject: interest ? `Interest: ${interest}` : "",
           message,
+          website,
         }),
       });
       const result = await res.json().catch(() => ({}));
@@ -183,6 +186,7 @@ function ContactForm() {
       </p>
 
       <form onSubmit={onSubmit} noValidate className="mt-7 space-y-4">
+        <Honeypot />
         <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
           <label className="block">
             <span className="mb-2 block text-xs font-medium text-muted">

@@ -1,9 +1,22 @@
 import { NextResponse } from "next/server";
 import nodemailer from "nodemailer";
+import { rateLimit, clientIp } from "@/lib/rate-limit";
 
 export const runtime = "nodejs";
 
 const TO = process.env.CONTACT_TO || "aqdaar.jamal@gmail.com";
+
+/* This endpoint sends mail and takes no auth, so it's an open relay unless it's
+   throttled: five submissions per IP per ten minutes is generous for a human
+   and useless to a flood. */
+const RATE_LIMIT = 5;
+const RATE_WINDOW_MS = 10 * 60 * 1000;
+
+/* The name of a field the form renders off-screen. A real person never sees it
+   and leaves it blank; a bot fills every input it finds. A filled value is the
+   clearest bot signal there is, so we drop it — quietly, as a success, rather
+   than telling the bot which field gave it away. */
+const HONEYPOT_FIELD = "website";
 
 function escapeHtml(str = "") {
   return String(str)
@@ -15,11 +28,26 @@ function escapeHtml(str = "") {
 }
 
 export async function POST(request) {
+  const ip = clientIp(request.headers);
+  const limit = rateLimit(`contact:${ip}`, RATE_LIMIT, RATE_WINDOW_MS);
+  if (!limit.ok) {
+    return NextResponse.json(
+      { error: "Too many messages. Please try again in a little while." },
+      { status: 429, headers: { "Retry-After": String(limit.retryAfter) } },
+    );
+  }
+
   let body;
   try {
     body = await request.json();
   } catch {
     return NextResponse.json({ error: "Invalid request." }, { status: 400 });
+  }
+
+  // Honeypot: a filled hidden field means a bot. Answer 200 so it thinks it
+  // succeeded and doesn't retry or adapt — but send nothing.
+  if ((body[HONEYPOT_FIELD] || "").toString().trim() !== "") {
+    return NextResponse.json({ ok: true });
   }
 
   const name = (body.name || "").toString().trim();
