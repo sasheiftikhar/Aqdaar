@@ -18,11 +18,31 @@ export function generateStaticParams() {
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { slug } = await params;
   const post = getPost(slug);
-  if (!post) return { title: "Not found | Aqdaar" };
+  if (!post) return { title: "Not found" };
 
+  const url = `/blog/${post.slug}`;
   return {
-    title: `${post.title} | Aqdaar`,
+    // The layout's title template appends "| Aqdaar", so just the post title.
+    title: post.title,
     description: post.excerpt,
+    authors: [{ name: post.author }],
+    // A per-post canonical stops the filter/query variants of the blog index
+    // competing with the post for the same ranking.
+    alternates: { canonical: url },
+    openGraph: {
+      type: "article",
+      url,
+      title: post.title,
+      description: post.excerpt,
+      publishedTime: new Date(`${post.date}T00:00:00Z`).toISOString(),
+      authors: [post.author],
+      section: post.category,
+    },
+    twitter: {
+      card: "summary_large_image",
+      title: post.title,
+      description: post.excerpt,
+    },
   };
 }
 

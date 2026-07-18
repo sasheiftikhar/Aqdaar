@@ -9,7 +9,8 @@ import TraineeVoices from "@/components/trainings/TraineeVoices";
 import TrainingHero from "@/components/trainings/TrainingHero";
 
 export const metadata: Metadata = {
-  title: "Trainings | Aqdaar",
+  title: "Trainings",
+  alternates: { canonical: "/trainings" },
   description:
     "Upskill with Aqdaar — the Dexter Lab Startup Bootcamp, the AI for Everyone skills series, and digital short courses. Running July through August and beyond.",
 };

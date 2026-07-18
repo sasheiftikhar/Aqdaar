@@ -7,7 +7,8 @@ import BlogIndex from "@/components/blog/BlogIndex";
 import { getPosts } from "@/lib/blog";
 
 export const metadata: Metadata = {
-  title: "Blog | Aqdaar",
+  title: "Blog",
+  alternates: { canonical: "/blog" },
   description:
     "Dispatches, case studies, and engineering notes from the team behind Dhundo, Banao, and Becho.",
 };

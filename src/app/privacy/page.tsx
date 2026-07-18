@@ -7,7 +7,8 @@ import { LegalBody, LegalSection } from "@/components/ui/LegalBody";
 import { ROUTES } from "@/lib/nav";
 
 export const metadata: Metadata = {
-  title: "Privacy Policy | Aqdaar",
+  title: "Privacy Policy",
+  alternates: { canonical: "/privacy" },
   description:
     "How Aqdaar collects, uses, and protects the information you share with us.",
 };

@@ -10,7 +10,8 @@ import CaseStudies from "@/components/consultation/CaseStudies";
 import DiscoveryCta from "@/components/consultation/DiscoveryCta";
 
 export const metadata: Metadata = {
-  title: "Consultation | Aqdaar",
+  title: "Consultation",
+  alternates: { canonical: "/consultation" },
   description:
     "Strategic guidance for growth — strategy and planning, leadership development, market entry, and growth advisory. Book a free discovery call.",
 };

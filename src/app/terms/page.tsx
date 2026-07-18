@@ -7,7 +7,8 @@ import { LegalBody, LegalSection } from "@/components/ui/LegalBody";
 import { ROUTES } from "@/lib/nav";
 
 export const metadata: Metadata = {
-  title: "Terms of Service | Aqdaar",
+  title: "Terms of Service",
+  alternates: { canonical: "/terms" },
   description:
     "The terms that apply when you use the Aqdaar website and the material on it.",
 };

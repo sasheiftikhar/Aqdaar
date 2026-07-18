@@ -11,9 +11,10 @@ import WaveField from "@/components/services/WaveField";
 import { ROUTES } from "@/lib/nav";
 
 export const metadata: Metadata = {
-  title: "About | Aqdaar",
+  title: "About",
   description:
     "Aqdaar is a product studio in Karachi. Dhundo finds the opportunity, Banao builds the product, Becho takes it to market — one team, end to end.",
+  alternates: { canonical: "/about" },
 };
 
 const DIVISIONS = [

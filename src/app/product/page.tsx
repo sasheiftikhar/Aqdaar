@@ -13,7 +13,8 @@ import ValueProps from "@/components/product/ValueProps";
 import PhaseTimeline from "@/components/product/PhaseTimeline";
 
 export const metadata: Metadata = {
-  title: "Aqdaar Studio | Product",
+  title: "Aqdaar Studio",
+  alternates: { canonical: "/product" },
   description:
     "Aqdaar Studio — the engine behind Dhundo, Banao and Becho. Discover the opportunity, build the product, and take it to market, all under one roof.",
 };

@@ -14,6 +14,7 @@
  */
 
 import { motion } from "framer-motion";
+import Image from "next/image";
 import { useEffect, useRef, useState } from "react";
 import { usePathname } from "next/navigation";
 import {
@@ -112,11 +113,15 @@ export default function Navbar() {
         <nav className="mx-auto flex h-16 max-w-[1400px] items-center justify-between px-6 lg:px-10">
           <a href={ROUTES.home} className="group flex items-center">
             {/* compact mark — the full wordmark with the signature script is the
-                footer's; at 32px tall the script would be illegible */}
-            {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img
+                footer's; at 32px tall the script would be illegible. `priority`
+                because it's in the header on every page, above the fold — the one
+                image that should never wait. */}
+            <Image
               src="/aqdaar-logo.png"
               alt="Aqdaar"
+              width={337}
+              height={96}
+              priority
               className="h-8 w-auto transition-transform group-hover:scale-[1.03]"
             />
           </a>

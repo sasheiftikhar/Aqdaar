@@ -8,7 +8,8 @@ import ServicesHow from "@/components/services/ServicesHow";
 import GetInTouch from "@/components/services/GetInTouch";
 
 export const metadata: Metadata = {
-  title: "Services | Aqdaar",
+  title: "Services",
+  alternates: { canonical: "/services" },
   description:
     "Discovery and strategy, design and production, go-to-market, trainings, consultation, and industrial solutions — everything it takes to go from idea to market.",
 };

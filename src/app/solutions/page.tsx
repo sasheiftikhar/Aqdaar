@@ -9,7 +9,8 @@ import Scale from "@/components/product/Scale";
 import { ROUTES } from "@/lib/nav";
 
 export const metadata: Metadata = {
-  title: "Solutions | Aqdaar",
+  title: "Solutions",
+  alternates: { canonical: "/solutions" },
   description:
     "The platform for building, running, and observing computer use agents. Your agents authenticate as users, operate any software, and access data locked behind a login.",
 };

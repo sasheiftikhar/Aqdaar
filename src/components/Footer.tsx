@@ -1,3 +1,4 @@
+import Image from "next/image";
 import { FOOTER_LEGAL, FOOTER_OFFERINGS, FOOTER_SITEMAP } from "@/lib/nav";
 
 /* Socials stay on "#" until the real handles are confirmed. */
@@ -114,10 +115,19 @@ export default function Footer() {
         max-w-[1300px] pair matches the footer columns above it exactly.
       */}
       <div className="pointer-events-none relative mt-16 w-full select-none px-6 pb-10">
-        {/* eslint-disable-next-line @next/next/no-img-element */}
-        <img
+        {/*
+          Sits at the very foot of every page, so it's never the LCP element and
+          never above the fold — loading it lazily keeps a 261KB PNG off the
+          critical path, and next/image serves it as a sized WebP besides.
+          `sizes` caps the request at the 1300px it's ever displayed at.
+        */}
+        <Image
           src="/aqdaar-wordmark.png"
           alt="Aqdaar"
+          width={1556}
+          height={443}
+          sizes="(max-width: 1300px) 100vw, 1300px"
+          loading="lazy"
           className="mx-auto block h-auto w-full max-w-[1300px]"
         />
       </div>

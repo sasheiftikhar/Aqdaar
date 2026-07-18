@@ -8,7 +8,8 @@ import FlagshipSpotlight from "@/components/events/FlagshipSpotlight";
 import PastHighlights from "@/components/events/PastHighlights";
 
 export const metadata: Metadata = {
-  title: "Events | Aqdaar",
+  title: "Events",
+  alternates: { canonical: "/events" },
   description:
     "Trainings, consultations, community nights, and meetups — where the Aqdaar community meets. Upcoming, ongoing, and past events.",
 };

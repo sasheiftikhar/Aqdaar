@@ -8,7 +8,8 @@ import TeamDirectory from "@/components/contact/TeamDirectory";
 import ContactMap from "@/components/contact/ContactMap";
 
 export const metadata: Metadata = {
-  title: "Contact | Aqdaar",
+  title: "Contact",
+  alternates: { canonical: "/contact" },
   description:
     "Let's Talk Big — start the conversation with Aqdaar. Trainings, consultation, solutions, services, or partnership. Karachi, working globally.",
 };
